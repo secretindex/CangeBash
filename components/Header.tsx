@@ -5,17 +5,19 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <header className="w-full px-8 py-2 flex flex-row items-center justify-between border-b-[#0004] border-b-[1px]">
+    <header className="w-full px-8 py-2 flex flex-row items-center justify-between border-b-[#0002] border-b-[1px]">
       <div className="">
-        <h1 className="text-lg font-bold">CangeBash</h1>
+        <Link href={"/"}>
+          <h1 className="text-lg text-violet-500 font-bold">CangeBash</h1>
+        </Link>
       </div>
       <div>
         <Link href={"/cadastro"}>
           <Button
             variant="outline"
-            className="bg-background text-sm font-bold hover:bg-[#2221] ease-in-out transition-all"
+            className="bg-background text-sm font-bold hover:bg-violet-100 hover:text-violet-500 text-violet-500 ease-in-out transition-all"
           >
-            <Plus /> Add
+            <Plus /> Adicionar fluxo
           </Button>
         </Link>
       </div>
