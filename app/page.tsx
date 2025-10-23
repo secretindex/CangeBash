@@ -13,19 +13,35 @@ import {
 } from "@/components/ui/select";
 
 import axios from "axios";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Toaster } from "@/components/ui/sonner";
-import { Search, SidebarOpenIcon } from "lucide-react";
+import { Search } from "lucide-react";
 import GetCard from "@/components/GetCard";
+import { createClient } from "@/utils/supabase/client";
+import useSWR from "swr";
+
+const fetcher = async (table: string) => {
+  const client = createClient();
+  const { data, error } = await client.from(table).select("*");
+
+  console.log(data);
+
+  return data as Array<{
+    id: number;
+    fluxo_id: number;
+    nome: string;
+    created_at: string;
+  }>;
+};
 
 export default function Home() {
+  const { data, error, isLoading, mutate } = useSWR("fluxos", fetcher);
+
   const [cards, setCards] = useState<Array<any>>([]);
-  const [flux, setFlux] = useState<{ nome: string; id: number }>({
-    nome: "Default",
-    id: 1,
-  });
+  const [flux, setFlux] = useState<number>();
+
   const [idCard, setIdCard] = useState<number>(0);
 
   useEffect(() => {
@@ -33,8 +49,15 @@ export default function Home() {
   }, [cards]);
 
   const handleGetCards = async () => {
+    if (!flux) {
+      toast.error("Selecione um fluxo!");
+
+      return;
+    }
+
     const res = await axios.get(
-      process.env.NEXT_PUBLIC_CANGE_API_URL + "/card/by-flow?flow_id=14266",
+      process.env.NEXT_PUBLIC_CANGE_API_URL +
+        `/card/by-flow?flow_id=${data![0].fluxo_id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -48,9 +71,14 @@ export default function Home() {
     setCards(res.data);
   };
 
-  const handleSelectCards = (e: number) => {
+  const handleSelectCards = (e: string | number) => {
     console.log(e);
-    if (e) setIdCard(e);
+    if (e) setIdCard(e as number);
+  };
+  
+  const handleSelectFlux = (e: string | number) => {
+    console.log(e);
+    if (e) setFlux(e as number);
   };
 
   return (
@@ -67,22 +95,18 @@ export default function Home() {
               <label className="text-sm text-neutral-600">
                 Selecione um Fluxo
               </label>
-              <Select>
+              <Select onValueChange={handleSelectFlux}>
                 <SelectTrigger className="w-full bg-background">
                   <SelectValue placeholder="Fluxo" />
                 </SelectTrigger>
                 <SelectContent className="bg-background">
                   <SelectGroup>
                     <SelectLabel>Fluxos</SelectLabel>
-                    {cards &&
-                      cards.map((card, index) => {
+                    {data &&
+                      data.map((flux, index) => {
                         return (
-                          <SelectItem
-                            className="hover:bg-[#0001] w-full transition-all ease-in-out"
-                            key={index}
-                            value={card.id_card}
-                          >
-                            {card.title}
+                          <SelectItem key={index} value={`${flux.fluxo_id}`}>
+                            {flux.nome}
                           </SelectItem>
                         );
                       })}

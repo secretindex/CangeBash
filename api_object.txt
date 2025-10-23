@@ -4562,3 +4562,31 @@
     "form_answers_highlitgh": []
   }
 ]
+
+
+                    {isLoading ? (
+                      <SelectItem value={"Loading..."} />
+                    ) : (
+                      <>
+                        {data &&
+                          data.map((flux, index) => {
+                            return (
+                              <SelectItem key={index} value="hello">
+                                {flux.fluxo_id}
+                              </SelectItem>
+                            );
+                          })}
+                      </>
+                    )}
+                    {cards &&
+                      cards.map((card, index) => {
+                        return (
+                          <SelectItem
+                            className="hover:bg-[#0001] w-full transition-all ease-in-out"
+                            key={index}
+                            value={card.id_card}
+                          >
+                            {card.title}
+                          </SelectItem>
+                        );
+                      })}
