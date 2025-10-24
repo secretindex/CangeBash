@@ -48,6 +48,10 @@ export default function Home() {
     if (cards.length > 0) toast.success("Preenchido todos os cards!");
   }, [cards]);
 
+  useEffect(() => {
+    console.log(idCard);
+  }, [idCard]);
+
   const handleGetCards = async () => {
     if (!flux) {
       toast.error("Selecione um fluxo!");
@@ -55,9 +59,10 @@ export default function Home() {
       return;
     }
 
+    console.log("esse é o fluxo " + flux);
+
     const res = await axios.get(
-      process.env.NEXT_PUBLIC_CANGE_API_URL +
-        `/card/by-flow?flow_id=${data![0].fluxo_id}`,
+      process.env.NEXT_PUBLIC_CANGE_API_URL + `/card/by-flow?flow_id=${flux}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -74,8 +79,10 @@ export default function Home() {
   const handleSelectCards = (e: string | number) => {
     console.log(e);
     if (e) setIdCard(e as number);
+
+    console.log(idCard);
   };
-  
+
   const handleSelectFlux = (e: string | number) => {
     console.log(e);
     if (e) setFlux(e as number);
@@ -151,7 +158,7 @@ export default function Home() {
               <Search />
               Buscar Cartões
             </Button>
-            <GetCard id_card={idCard} flow_id={14266} />
+            <GetCard id_card={idCard} flow_id={flux as number} />
           </div>
         </div>
       </main>

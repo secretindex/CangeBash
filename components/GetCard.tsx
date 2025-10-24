@@ -8,10 +8,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SidebarOpen } from "lucide-react";
 
 import axios from "axios";
-import { useState } from "react";
+import useSWR from "swr";
+
+const fetcher = async (ids: string) => {
+  // first comes Card ID, then Flow ID
+  const cardAndFlow = ids.split(",");
+
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card?id_card=${cardAndFlow[0]}&flow_id=${cardAndFlow[1]}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
+      },
+    },
+  );
+
+  return res.data;
+};
 
 const GetCard = ({
   id_card,
@@ -20,20 +36,12 @@ const GetCard = ({
   id_card: number;
   flow_id: number;
 }) => {
-  const [card, setCard] = useState<Object | undefined>(undefined);
+  const { data, error, isLoading, mutate } = useSWR(
+    `${id_card},${flow_id}`,
+    fetcher,
+  );
 
-  const handleFetch = async () => {
-    const res = await axios.get(
-      process.env.NEXT_PUBLIC_CANGE_API_URL +
-        `/card?id_card=${id_card}&flow_id=${flow_id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
-        },
-      },
-    );
-  };
+  console.log(data);
 
   return (
     <Dialog>
@@ -41,13 +49,23 @@ const GetCard = ({
         Abrir Cartão
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Cartão</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
-        </DialogHeader>
+        {error || !data ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>Nenhum cartão selecionado!</DialogTitle>
+              <DialogDescription>
+                Selecione um cartão antes de associar uma mensagem
+              </DialogDescription>
+            </DialogHeader>
+          </>
+        ) : (
+          <DialogHeader>
+            <DialogTitle>{data && data.title}</DialogTitle>
+            <DialogDescription>
+              
+            </DialogDescription>
+          </DialogHeader>
+        )}
       </DialogContent>
     </Dialog>
   );

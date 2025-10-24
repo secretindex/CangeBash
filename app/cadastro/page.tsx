@@ -3,8 +3,10 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
+
+import { BaseSyntheticEvent, useEffect, useState } from "react";
+
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -46,14 +48,13 @@ const Cadastro = () => {
       return;
     }
 
-    const { error } = await supabase
-      .from("fluxos")
-      .insert({ fluxo_id: 123, nome: "Oi" });
+    const { error } = await supabase.from("fluxos").insert(novoFluxo);
 
     if (error) {
       toast.error(error.message);
     } else {
       toast.success("Fluxo adicionado com sucesso");
+      setNovoFluxo({ fluxo_id: 0, nome: "" });
     }
   };
 
@@ -76,6 +77,7 @@ const Cadastro = () => {
               <Input
                 type="text"
                 placeholder="Nome"
+                value={novoFluxo.nome}
                 onChange={(e: BaseSyntheticEvent) =>
                   setNovoFluxo((prev) => ({ ...prev, nome: e.target.value }))
                 }
@@ -88,6 +90,7 @@ const Cadastro = () => {
               <Input
                 type="number"
                 placeholder="ID"
+                value={novoFluxo.fluxo_id}
                 onChange={(e: BaseSyntheticEvent) =>
                   setNovoFluxo((prev) => ({
                     ...prev,
