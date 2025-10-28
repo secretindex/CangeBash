@@ -11,6 +11,9 @@ import {
 
 import axios from "axios";
 import useSWR from "swr";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "@radix-ui/react-select";
 
 const fetcher = async (ids: string) => {
   // first comes Card ID, then Flow ID
@@ -62,7 +65,11 @@ const GetCard = ({
           <DialogHeader>
             <DialogTitle>{data && data.title}</DialogTitle>
             <DialogDescription>
-              
+              <div>
+                <Label>Add new message to card</Label>
+                <Input type="text"></Input>
+              </div>
+              <Button className="rounded-md">Adicionar mensagem</Button>
             </DialogDescription>
           </DialogHeader>
         )}
