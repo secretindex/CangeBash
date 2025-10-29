@@ -13,7 +13,9 @@ import axios from "axios";
 import useSWR from "swr";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Label } from "@radix-ui/react-select";
+import { Select } from "./ui/select";
+import mockConversas from "./message_api_mock";
+import MessageItem from "./MessageItem";
 
 const fetcher = async (ids: string) => {
   // first comes Card ID, then Flow ID
@@ -46,6 +48,9 @@ const GetCard = ({
 
   console.log(data);
 
+  // mensagem.cliente.nome
+  // mensagem.criadoEm
+
   return (
     <Dialog>
       <DialogTrigger className="cursor-pointer justify-center w-1/2 bg-violet-400 text-white flex items-center hover:bg-[#8e51ff] hover:text-white transition-all rounded-md px-2 text-sm ease-in-out">
@@ -64,10 +69,21 @@ const GetCard = ({
         ) : (
           <DialogHeader>
             <DialogTitle>{data && data.title}</DialogTitle>
-            <DialogDescription>
-              <div>
-                <Label>Add new message to card</Label>
-                <Input type="text"></Input>
+            <DialogDescription className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1">
+                <span>Adicione uma nova mensagem ao card</span>
+                <div className="flex flex-col gap-2">
+                  {mockConversas.map((conversa) => {
+                    return (
+                      <MessageItem
+                        key={conversa.conversaId}
+                        title={conversa.cliente.nome}
+                        date={new Date(conversa.criadoEm)}
+                        conversaId={conversa.conversaId}
+                      />
+                    );
+                  })}
+                </div>
               </div>
               <Button className="rounded-md">Adicionar mensagem</Button>
             </DialogDescription>

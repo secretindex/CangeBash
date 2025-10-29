@@ -15,12 +15,14 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useContext } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { Search } from "lucide-react";
 import GetCard from "@/components/GetCard";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
+import { CardAndFluxContext } from "@/components/context/CardAndFlux";
 
 const fetcher = async (table: string) => {
   const client = createClient();
@@ -38,6 +40,7 @@ const fetcher = async (table: string) => {
 
 export default function Home() {
   const { data, error, isLoading, mutate } = useSWR("fluxos", fetcher);
+  const cnfContext = useContext(CardAndFluxContext);
 
   const [cards, setCards] = useState<Array<any>>([]);
   const [flux, setFlux] = useState<number>();
@@ -51,6 +54,10 @@ export default function Home() {
   useEffect(() => {
     console.log(idCard);
   }, [idCard]);
+
+  useEffect(() => {
+    cnfContext?.setCardAndFlux(() => {flux, idCard});
+  }, [flux, idCard]);
 
   const handleGetCards = async () => {
     if (!flux) {
