@@ -100,6 +100,12 @@ const Cadastro = () => {
               ></Input>
             </div>
             <div>
+              <label className="text-sm text-neutral-600">
+                Link do formulário inicial
+              </label>
+              <Input type="text" placeholder="Link público"></Input>
+            </div>
+            <div>
               <Button
                 variant="outline"
                 className="cursor-pointer w-full hover:bg-[#3331] transition-all ease-in-out"

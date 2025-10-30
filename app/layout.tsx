@@ -26,14 +26,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <CardAndFluxContextProvider>
+      <CardAndFluxContextProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+        >
           <Header />
-          {children}
-        </CardAndFluxContextProvider>
-      </body>
+          <main className="min-h-screen pt-14 flex items-center justify-center">
+            {children}
+          </main>
+        </body>
+      </CardAndFluxContextProvider>
     </html>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { Children, createContext, ReactNode } from "react";
 import { useState, Dispatch, SetStateAction } from "react";
 

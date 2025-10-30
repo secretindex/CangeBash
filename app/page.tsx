@@ -22,7 +22,10 @@ import { Search } from "lucide-react";
 import GetCard from "@/components/GetCard";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
-import { CardAndFluxContext } from "@/components/context/CardAndFlux";
+import {
+  CardAndFlux,
+  CardAndFluxContext,
+} from "@/components/context/CardAndFlux";
 
 const fetcher = async (table: string) => {
   const client = createClient();
@@ -55,10 +58,6 @@ export default function Home() {
     console.log(idCard);
   }, [idCard]);
 
-  useEffect(() => {
-    cnfContext?.setCardAndFlux(() => {flux, idCard});
-  }, [flux, idCard]);
-
   const handleGetCards = async () => {
     if (!flux) {
       toast.error("Selecione um fluxo!");
@@ -84,20 +83,28 @@ export default function Home() {
   };
 
   const handleSelectCards = (e: string | number) => {
-    console.log(e);
-    if (e) setIdCard(e as number);
+    if (e) {
+      setIdCard(e as number);
 
-    console.log(idCard);
+      cnfContext?.setCardAndFlux(
+        (prev) => ({ ...prev, cardId: e as number }) as CardAndFlux,
+      );
+    }
   };
 
   const handleSelectFlux = (e: string | number) => {
-    console.log(e);
-    if (e) setFlux(e as number);
+    if (e) {
+      setFlux(e as number);
+
+      cnfContext?.setCardAndFlux(
+        (prev) => ({ ...prev, fluxId: e as number }) as CardAndFlux,
+      );
+    }
   };
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col w-1/3 justify-center row-start-2 items-center">
+    <div className="font-sans w-full grid grid-rows-[20px_1fr_20px] items-center justify-items-center h-full p-8 pb-20 gap-16 sm:p-20">
+      <div className="flex flex-col w-1/3 justify-center row-start-2 items-center">
         <div className="flex flex-col w-full gap-3 border-[1px] p-8 border-[#0002] rounded-md shadow-lg">
           <div className="flex flex-col mb-4 gap-2">
             <h1 className="text-center font-bold text-xl text-violet-500">
@@ -168,7 +175,7 @@ export default function Home() {
             <GetCard id_card={idCard} flow_id={flux as number} />
           </div>
         </div>
-      </main>
+      </div>
       <Toaster />
     </div>
   );

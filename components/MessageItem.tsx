@@ -18,7 +18,10 @@ import {
 } from "./ui/dropdown-menu";
 
 import { Button } from "./ui/button";
+import { useContext, useEffect } from "react";
 import axios from "axios";
+import { CardAndFluxContext } from "./context/CardAndFlux";
+import Link from "next/link";
 
 interface MessageProps {
   title: string;
@@ -29,9 +32,29 @@ interface MessageProps {
 const MessageItem = ({ title, date, conversaId }: MessageProps) => {
   const [dia, hora] = date.toLocaleString().split(", ");
 
-  const handleAssociateMessageToExistingCard = () => {
-    axios.post("");
-    const desire = "";
+  useEffect(() => {
+    console.log("oi");
+  }, []);
+
+  const cnfContext = useContext(CardAndFluxContext);
+
+  const handleAssociateMessageToExistingCard = async () => {
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card-comment`,
+      {
+        card_id: cnfContext?.cardAndFlux?.cardId,
+        flow_id: cnfContext?.cardAndFlux?.fluxId,
+        description: `A mensagem do link ${conversaId}, conversa com ${title} no dia ${dia}, às ${hora}, foi associada ao cartão!`,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
+        },
+      },
+    );
+
+    console.log(res.data);
   };
 
   return (
@@ -51,9 +74,11 @@ const MessageItem = ({ title, date, conversaId }: MessageProps) => {
             <DropdownMenuLabel>Mensagem</DropdownMenuLabel>
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                Criar novo a partir da mensagem
+                <Link href="/test-embed">Criar novo a partir da mensagem</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>Adicionar ao cartão</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleAssociateMessageToExistingCard}>
+                Adicionar ao cartão
+              </DropdownMenuItem>
               <DropdownMenuItem>Visualizar Mensagem</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

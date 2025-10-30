@@ -12,10 +12,11 @@ import {
 import axios from "axios";
 import useSWR from "swr";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Select } from "./ui/select";
+// import { Input } from "./ui/input";
+// import { Select } from "./ui/select";
 import mockConversas from "./message_api_mock";
 import MessageItem from "./MessageItem";
+
 
 const fetcher = async (ids: string) => {
   // first comes Card ID, then Flow ID
@@ -50,6 +51,8 @@ const GetCard = ({
 
   // mensagem.cliente.nome
   // mensagem.criadoEm
+  //
+
 
   return (
     <Dialog>
@@ -70,9 +73,9 @@ const GetCard = ({
           <DialogHeader>
             <DialogTitle>{data && data.title}</DialogTitle>
             <DialogDescription className="flex flex-col gap-6">
-              <div className="flex flex-col gap-1">
+              <span className="flex flex-col gap-1">
                 <span>Adicione uma nova mensagem ao card</span>
-                <div className="flex flex-col gap-2">
+                <span className="flex flex-col gap-2">
                   {mockConversas.map((conversa) => {
                     return (
                       <MessageItem
@@ -83,8 +86,8 @@ const GetCard = ({
                       />
                     );
                   })}
-                </div>
-              </div>
+                </span>
+              </span>
               <Button className="rounded-md">Adicionar mensagem</Button>
             </DialogDescription>
           </DialogHeader>
