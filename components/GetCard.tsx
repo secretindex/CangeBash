@@ -88,7 +88,6 @@ const GetCard = ({
                   })}
                 </span>
               </span>
-              <Button className="rounded-md">Adicionar mensagem</Button>
             </DialogDescription>
           </DialogHeader>
         )}

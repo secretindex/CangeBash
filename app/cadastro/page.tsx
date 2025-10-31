@@ -14,7 +14,8 @@ const Cadastro = () => {
   const [novoFluxo, setNovoFluxo] = useState<{
     fluxo_id: number;
     nome: string;
-  }>({ fluxo_id: 0, nome: "" });
+    formulario: string;
+  }>({ fluxo_id: 0, nome: "", formulario: "" });
 
   const handleAddCard = async (e: BaseSyntheticEvent) => {
     const supabase = createClient();
@@ -54,7 +55,7 @@ const Cadastro = () => {
       toast.error(error.message);
     } else {
       toast.success("Fluxo adicionado com sucesso");
-      setNovoFluxo({ fluxo_id: 0, nome: "" });
+      setNovoFluxo({ fluxo_id: 0, nome: "", formulario: "" });
     }
   };
 
@@ -103,7 +104,17 @@ const Cadastro = () => {
               <label className="text-sm text-neutral-600">
                 Link do formulário inicial
               </label>
-              <Input type="text" placeholder="Link público"></Input>
+              <Input
+                type="text"
+                placeholder="Link público"
+                value={novoFluxo.formulario}
+                onChange={(e: BaseSyntheticEvent) =>
+                  setNovoFluxo((prev) => ({
+                    ...prev,
+                    formulario: e.target.value,
+                  }))
+                }
+              ></Input>
             </div>
             <div>
               <Button
@@ -111,7 +122,7 @@ const Cadastro = () => {
                 className="cursor-pointer w-full hover:bg-[#3331] transition-all ease-in-out"
                 onClick={handleAddCard}
               >
-                Adicionar cartão
+                Adicionar fluxo
               </Button>
             </div>
           </form>

@@ -79,6 +79,11 @@ export default function Home() {
 
     console.log(res.data);
 
+    if (res.data.length <= 0) {
+      toast.error("Nenhum cartão foi encontrado neste fluxo");
+      return;
+    }
+
     setCards(res.data);
   };
 
