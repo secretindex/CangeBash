@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+// import axios from "axios";
 import mockConversas from "@/components/message_api_mock";
 import MessageList from "@/components/MessageList";
 import { Toaster } from "@/components/ui/sonner";
@@ -13,6 +13,7 @@ import { Spinner } from "@/components/ui/spinner";
 const PageEmbed = () => {
   const searchParams = useSearchParams();
   const fluxId = searchParams.get("flux_id");
+  const conversaId = searchParams.get("conversa_id");
   const [formLink, setFormLink] = useState<string>("");
 
   console.log(fluxId);
@@ -46,23 +47,25 @@ const PageEmbed = () => {
         </h1>
         <div className="flex flex-col gap-3 h-4/5 overflow-clip">
           {/* Add information about conversation and button to "resumir with AI" */}
-          {mockConversas[0].mensagens.map((mensagem, index) => {
-            return (
-              <MessageList
-                key={index}
-                time={
-                  new Date(mensagem.sentAt)
-                    .toLocaleString()
-                    .split(", ")[1] as string
-                }
-                name={mensagem.from}
-                message={mensagem.mensagem}
-              />
-            );
-          })}
+          {mockConversas
+            .find((c) => c.conversaId === conversaId)!
+            .mensagens.map((mensagem, index) => {
+              return (
+                <MessageList
+                  key={index}
+                  time={
+                    new Date(mensagem.sentAt)
+                      .toLocaleString()
+                      .split(", ")[1] as string
+                  }
+                  name={mensagem.from}
+                  message={mensagem.mensagem}
+                />
+              );
+            })}
         </div>
         <div>
-          <SummarizedText />
+          <SummarizedText conversaId={conversaId as string} />
         </div>
       </div>
       <Toaster />

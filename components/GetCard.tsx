@@ -16,7 +16,8 @@ import { Button } from "./ui/button";
 // import { Select } from "./ui/select";
 import mockConversas from "./message_api_mock";
 import MessageItem from "./MessageItem";
-
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const fetcher = async (ids: string) => {
   // first comes Card ID, then Flow ID
@@ -47,12 +48,13 @@ const GetCard = ({
     fetcher,
   );
 
-  console.log(data);
+  console.log(data, error);
 
-  // mensagem.cliente.nome
-  // mensagem.criadoEm
-  //
-
+  useEffect(() => {
+    if (data === undefined) {
+      toast.error("Nenhum cartão foi encontrado!");
+    }
+  }, [data]);
 
   return (
     <Dialog>

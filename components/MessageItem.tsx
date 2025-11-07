@@ -23,6 +23,7 @@ import axios from "axios";
 import { CardAndFluxContext } from "./context/CardAndFlux";
 import Link from "next/link";
 import { toast } from "sonner";
+import { createClient } from "@/utils/supabase/client";
 
 interface MessageProps {
   title: string;
@@ -32,6 +33,7 @@ interface MessageProps {
 
 const MessageItem = ({ title, date, conversaId }: MessageProps) => {
   const [dia, hora] = date.toLocaleString().split(", ");
+  const supabase = createClient();
 
   useEffect(() => {
     console.log("oi");
@@ -56,7 +58,22 @@ const MessageItem = ({ title, date, conversaId }: MessageProps) => {
         },
       );
 
+      const { data, error } = await supabase
+        .from("conversas")
+        .insert({
+          flux_id: cnfContext!.cardAndFlux!.fluxId,
+          card_id: cnfContext!.cardAndFlux!.cardId,
+          conversa_id: conversaId,
+        })
+        .select();
+
       console.log(res.data);
+      console.log("from supabase  " + data);
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
       toast.success("mensagem adicionada ao cartão");
     } catch (error) {
@@ -80,17 +97,28 @@ const MessageItem = ({ title, date, conversaId }: MessageProps) => {
           <DropdownMenuContent className="w-64">
             <DropdownMenuLabel>Mensagem</DropdownMenuLabel>
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link
-                  href={"/embed?flux_id=" + cnfContext?.cardAndFlux?.fluxId}
-                >
+              <Link
+                className="cursor-default"
+                href={
+                  "/embed?flux_id=" +
+                  cnfContext?.cardAndFlux?.fluxId +
+                  "&conversa_id=" +
+                  conversaId
+                }
+              >
+                <DropdownMenuItem>
                   Criar novo a partir da mensagem
-                </Link>
-              </DropdownMenuItem>
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem onClick={handleAssociateMessageToExistingCard}>
                 Adicionar ao cartão
               </DropdownMenuItem>
-              <DropdownMenuItem>Visualizar Mensagem</DropdownMenuItem>
+              <Link
+                className="cursor-default"
+                href={"/mensagem?conversa_id=" + conversaId}
+              >
+                <DropdownMenuItem>Visualizar Mensagem</DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

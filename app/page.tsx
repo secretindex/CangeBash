@@ -113,7 +113,7 @@ export default function Home() {
         <div className="flex flex-col w-full gap-3 border-[1px] p-8 border-[#0002] rounded-md shadow-lg">
           <div className="flex flex-col mb-4 gap-2">
             <h1 className="text-center font-bold text-xl text-violet-500">
-              Integração Cange Bash - CangeBash
+              Integração Cange Bash
             </h1>
           </div>
           <div className="flex flex-col gap-1">
