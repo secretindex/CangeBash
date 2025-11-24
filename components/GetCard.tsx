@@ -11,16 +11,12 @@ import {
 
 import axios from "axios";
 import useSWR from "swr";
-import { Button } from "./ui/button";
-// import { Input } from "./ui/input";
-// import { Select } from "./ui/select";
 import mockConversas from "./message_api_mock";
 import MessageItem from "./MessageItem";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
 const fetcher = async (ids: string) => {
-  // first comes Card ID, then Flow ID
   const cardAndFlow = ids.split(",");
 
   const res = await axios.get(

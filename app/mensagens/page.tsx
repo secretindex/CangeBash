@@ -1,10 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
 import useSWR from "swr";
-import axios from "axios";
-import MessageItem from "@/components/MessageItem";
 
 const fetcher = async (table: string) => {
   const client = createClient();
