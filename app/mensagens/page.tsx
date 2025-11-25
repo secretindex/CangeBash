@@ -33,7 +33,7 @@ const MensagensFlux = () => {
             const conversa = mockConversas.find(
               (c) => c.conversaId === con.conversa_id,
             );
-            let cardName, fluxName;
+            // let cardName, fluxName;
 
             return (
               <MessageItemMessages
