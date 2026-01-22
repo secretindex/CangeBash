@@ -29,6 +29,14 @@ const Header = () => {
             Mensagens
           </Button>
         </Link>
+        <Link href={"/tiflux"}>
+          <Button
+            variant="outline"
+            className="bg-background p-1 text-sm font-bold hover:bg-fuchsia-100 hover:text-fuchsia-500 text-fuchsia-500 ease-in-out transition-all"
+          >
+            Histórico de Tickets
+          </Button>
+        </Link>
       </div>
     </header>
   );

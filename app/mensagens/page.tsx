@@ -23,7 +23,7 @@ import MessageItemMessages from "@/components/MessageItemMessages";
 
 const MensagensFlux = () => {
   const { data, error, isLoading, mutate } = useSWR("conversas", fetcher);
-  
+
   // data.ticket.contact.name
   // data.ticket.user.name
   // data.ticket.queue.queue
