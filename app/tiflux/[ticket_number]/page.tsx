@@ -1,3 +1,8 @@
+"use client";
+
+import { useParams } from "next/navigation";
+
 const TifluxTicketPage = () => {
-  return <div>Tiflux Ticket Page</div>
-}
+  const params = useParams();
+  return <div>Tiflux Ticket Page {params.ticket_number}</div>;
+};
