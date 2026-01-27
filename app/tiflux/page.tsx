@@ -14,7 +14,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
+import DataTableDemo from "@/components/tiflux_archive/TicketsTable";
 
 //{ticketsData.map((ticket: any) => (
 //  <TicketCard
@@ -60,10 +62,7 @@ const TifluxPage = () => {
           <Button variant="default" className="cursor-pointer" onClick={uploadTickets}>Subir tickets</Button>
         </div>
         <div className="panel h-3/5 w-9/12 grid grid-cols-3 gap-4">
-          <Input placeholder="Buscar ticket" className="outline-none" />
-          <Table>
-            <TableHeader></TableHeader>
-          </Table>
+          <DataTableDemo />
         </div>
       </div>
     </section>
