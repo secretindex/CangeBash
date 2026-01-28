@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
   DropdownMenu,
@@ -12,9 +12,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 
 import {
   Table,
@@ -23,7 +23,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 import {
   flexRender,
@@ -36,12 +36,12 @@ import {
   type ColumnFiltersState,
   type SortingState,
   type VisibilityState,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
-import { Ticket, ticketsData } from "@/app/tiflux/tickets"
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { Ticket, ticketsData } from "@/app/tiflux/tickets";
 
-const data: Ticket[] = ticketsData
+const data: Ticket[] = ticketsData ?? [];
 
 export const columns: ColumnDef<Ticket>[] = [
   {
@@ -52,7 +52,9 @@ export const columns: ColumnDef<Ticket>[] = [
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value: any) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={(value: any) =>
+          table.toggleAllPageRowsSelected(!!value)
+        }
         aria-label="Select all"
       />
     ),
@@ -67,47 +69,72 @@ export const columns: ColumnDef<Ticket>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "email",
+    accessorKey: "ticket_number",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Ticket #
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("ticket_number")}</div>
+    ),
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "title",
+    header: "Título",
+    cell: ({ row }) => <div>{row.getValue("title")}</div>,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount.
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
+      const status = row.original.status;
+      return <div className="capitalize">{status?.name || "N/A"}</div>;
+    },
+  },
+  {
+    accessorKey: "priority",
+    header: "Prioridade",
+    cell: ({ row }) => {
+      const priority = row.original.priority;
+      return <div>{priority?.name || "N/A"}</div>;
+    },
+  },
+  {
+    accessorKey: "requestor",
+    header: "Solicitante",
+    cell: ({ row }) => {
+      const requestor = row.original.requestor;
+      return <div>{requestor?.email || requestor?.name || "N/A"}</div>;
+    },
+  },
+  {
+    accessorKey: "responsible",
+    header: "Responsável",
+    cell: ({ row }) => {
+      const responsible = row.original.responsible;
+      return <div>{responsible?.name || "N/A"}</div>;
+    },
+  },
+  {
+    accessorKey: "created_at",
+    header: "Data Criação",
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("created_at"));
+      return <div>{date.toLocaleDateString("pt-BR")}</div>;
     },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const ticket = row.original;
 
       return (
         <DropdownMenu>
@@ -119,32 +146,34 @@ export const columns: ColumnDef<Ticket>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
+                onClick={() =>
+                  navigator.clipboard.writeText(String(ticket.ticket_number))
+                }
               >
-                Copy payment ID
+                Copiar número do ticket
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuGroup>
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
+              <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
+              <DropdownMenuItem>Ver solicitante</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
-export function DataTableDemo() {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function TifluxTable() {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+    [],
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -163,23 +192,23 @@ export function DataTableDemo() {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filtrar por título..."
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
+              Colunas <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -199,7 +228,7 @@ export function DataTableDemo() {
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -217,10 +246,10 @@ export function DataTableDemo() {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -236,7 +265,7 @@ export function DataTableDemo() {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -280,6 +309,6 @@ export function DataTableDemo() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-export default DataTableDemo
+export default TifluxTable;
