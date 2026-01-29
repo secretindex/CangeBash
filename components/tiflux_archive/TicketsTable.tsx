@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -134,6 +135,7 @@ export const columns: ColumnDef<Ticket>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const router = useRouter();
       const ticket = row.original;
 
       return (
@@ -147,6 +149,11 @@ export const columns: ColumnDef<Ticket>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => router.push(`/tiflux/${ticket.ticket_number}`)}
+              >
+                Abrir
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
                   navigator.clipboard.writeText(String(ticket.ticket_number))
@@ -198,10 +205,10 @@ export function TifluxTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filtrar por título..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          placeholder="Filtrar por número do ticket..."
+          value={(table.getColumn("ticket_number")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("ticket_number")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -220,7 +227,6 @@ export function TifluxTable() {
                   return (
                     <DropdownMenuCheckboxItem
                       key={column.id}
-                      className="capitalize"
                       checked={column.getIsVisible()}
                       onCheckedChange={(value) =>
                         column.toggleVisibility(!!value)
@@ -234,6 +240,7 @@ export function TifluxTable() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -245,15 +252,16 @@ export function TifluxTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   );
                 })}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -277,13 +285,14 @@ export function TifluxTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Nenhum ticket encontrado.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
