@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -145,6 +143,7 @@ export const columns: ColumnDef<Ticket>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const router = useRouter();
       const ticket = row.original;
       const router = useRouter();
 
@@ -159,21 +158,18 @@ export const columns: ColumnDef<Ticket>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
-            </DropdownMenuGroup>
-            <DropdownMenuGroup>
               <DropdownMenuItem
-                onClick={() => router.push(`/tiflux/${ticket.ticket_number}`)}
+                onClick={() =>
+                  navigator.clipboard.writeText(String(ticket.ticket_number))
+                }
               >
-                Abrir
+                Copiar número do ticket
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(String(ticket.ticket_number))
-              }
-            >
-              Copiar número do ticket
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
+              <DropdownMenuItem>Ver solicitante</DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -274,10 +270,10 @@ export function TifluxTable() {
         />
         <Input
           placeholder="Filtrar por título..."
-          value={rawTitle}
-          onChange={(event) => {
-            setRawTitle(event.target.value);
-          }}
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
+          }
           className="max-w-sm"
         />
         <Input
@@ -308,7 +304,6 @@ export function TifluxTable() {
                   return (
                     <DropdownMenuCheckboxItem
                       key={column.id}
-                      className="capitalize"
                       checked={column.getIsVisible()}
                       onCheckedChange={(value) =>
                         column.toggleVisibility(!!value)
@@ -322,6 +317,7 @@ export function TifluxTable() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -333,15 +329,16 @@ export function TifluxTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   );
                 })}
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -365,13 +362,14 @@ export function TifluxTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {data && data.length === 0 ? "No results." : "Loading..."}
+                  No results.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
           Showing {pagination.pageIndex * pagination.pageSize + 1} -{" "}
