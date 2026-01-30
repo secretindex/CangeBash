@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -38,10 +40,17 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-import { Ticket, ticketsData } from "@/app/tiflux/tickets";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  MoreHorizontal,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+import useSWR from "swr";
+import { Ticket } from "@/app/tiflux/tickets";
 
-const data: Ticket[] = ticketsData ?? [];
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export const columns: ColumnDef<Ticket>[] = [
   {
@@ -71,40 +80,42 @@ export const columns: ColumnDef<Ticket>[] = [
   {
     accessorKey: "ticket_number",
     header: ({ column }) => {
+      const sorted = column.getIsSorted();
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="flex items-center gap-1"
         >
-          Ticket #
-          <ArrowUpDown />
+          Ticket
+          {sorted === "asc" ? (
+            <ArrowUp className="w-4 h-4" />
+          ) : sorted === "desc" ? (
+            <ArrowDown className="w-4 h-4" />
+          ) : (
+            <ArrowUpDown className="w-4 h-4" />
+          )}
         </Button>
       );
     },
     cell: ({ row }) => (
       <div className="font-medium">{row.getValue("ticket_number")}</div>
     ),
+    filterFn: (row, columnId, filterValue: unknown) => {
+      const cell = row.getValue(columnId);
+      if (
+        filterValue === undefined ||
+        filterValue === null ||
+        String(filterValue) === ""
+      )
+        return true;
+      return String(cell).startsWith(String(filterValue));
+    },
   },
   {
     accessorKey: "title",
     header: "Título",
     cell: ({ row }) => <div>{row.getValue("title")}</div>,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.original.status;
-      return <div className="capitalize">{status?.name || "N/A"}</div>;
-    },
-  },
-  {
-    accessorKey: "priority",
-    header: "Prioridade",
-    cell: ({ row }) => {
-      const priority = row.original.priority;
-      return <div>{priority?.name || "N/A"}</div>;
-    },
   },
   {
     accessorKey: "requestor",
@@ -135,6 +146,7 @@ export const columns: ColumnDef<Ticket>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const ticket = row.original;
+      const router = useRouter();
 
       return (
         <DropdownMenu>
@@ -147,18 +159,21 @@ export const columns: ColumnDef<Ticket>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(String(ticket.ticket_number))
-                }
-              >
-                Copiar número do ticket
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuGroup>
-              <DropdownMenuItem>Ver detalhes</DropdownMenuItem>
-              <DropdownMenuItem>Ver solicitante</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push(`/tiflux/${ticket.ticket_number}`)}
+              >
+                Abrir
+              </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={() =>
+                navigator.clipboard.writeText(String(ticket.ticket_number))
+              }
+            >
+              Copiar número do ticket
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -167,17 +182,75 @@ export const columns: ColumnDef<Ticket>[] = [
 ];
 
 export function TifluxTable() {
+  const router = useRouter();
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  // pagination + filters (use table-controlled pagination: pageIndex is 0-based)
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 50,
+  });
+  const [rawTitle, setRawTitle] = React.useState("");
+  const [rawTicket, setRawTicket] = React.useState("");
+  const [titleFilter, setTitleFilter] = React.useState("");
+  const [ticketFilter, setTicketFilter] = React.useState("");
+
+  // debounce raw inputs to reduce requests
+  React.useEffect(() => {
+    const t = setTimeout(() => {
+      setTitleFilter(rawTitle);
+      setPagination((p) => ({ ...p, pageIndex: 0 }));
+    }, 350);
+    return () => clearTimeout(t);
+  }, [rawTitle]);
+
+  React.useEffect(() => {
+    const t = setTimeout(() => {
+      setTicketFilter(rawTicket);
+      setPagination((p) => ({ ...p, pageIndex: 0 }));
+    }, 250);
+    return () => clearTimeout(t);
+  }, [rawTicket]);
+
+  const {
+    data: pageData,
+    error,
+    isValidating,
+  } = useSWR(
+    (() => {
+      const sortField = sorting?.[0]?.id ?? "ticket_number";
+      const sortDir = sorting?.[0]?.desc ? "desc" : "asc";
+      return `/api/tiflux/tickets?page=${pagination.pageIndex + 1}&pageSize=${pagination.pageSize}&title=${encodeURIComponent(
+        titleFilter,
+      )}&ticket=${encodeURIComponent(ticketFilter)}&sortField=${encodeURIComponent(sortField)}&sortDir=${encodeURIComponent(sortDir)}`;
+    })(),
+    fetcher,
+  );
+
+  const data: Ticket[] = pageData?.tickets ?? [];
+  const total = pageData?.total ?? 0;
+
   const table = useReactTable({
     data,
     columns,
+    manualPagination: true,
+    pageCount: Math.max(1, Math.ceil(total / pagination.pageSize)),
+    onPaginationChange: setPagination,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      pagination,
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -186,24 +259,39 @@ export function TifluxTable() {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
   });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
+          placeholder="Filtrar por número do ticket..."
+          value={rawTicket}
+          onChange={(event) => {
+            setRawTicket(event.target.value);
+          }}
+          className="max-w-xs mr-4"
+        />
+        <Input
           placeholder="Filtrar por título..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
+          value={rawTitle}
+          onChange={(event) => {
+            setRawTitle(event.target.value);
+          }}
           className="max-w-sm"
+        />
+        <Input
+          placeholder="Ir para o ticket"
+          className="max-w-xs ml-4"
+          type="number"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              const value = (e.target as HTMLInputElement).value;
+              if (value.trim() !== "") {
+                router.push(`/tiflux/${value.trim()}`);
+              }
+            }
+          }}
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -277,7 +365,7 @@ export function TifluxTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {data && data.length === 0 ? "No results." : "Loading..."}
                 </TableCell>
               </TableRow>
             )}
@@ -286,23 +374,34 @@ export function TifluxTable() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          Showing {pagination.pageIndex * pagination.pageSize + 1} -{" "}
+          {Math.min((pagination.pageIndex + 1) * pagination.pageSize, total)} of{" "}
+          {total} tickets
         </div>
         <div className="space-x-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() =>
+              setPagination((p) => ({
+                ...p,
+                pageIndex: Math.max(0, p.pageIndex - 1),
+              }))
+            }
+            disabled={pagination.pageIndex <= 0 || isValidating}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() =>
+              setPagination((p) => ({ ...p, pageIndex: p.pageIndex + 1 }))
+            }
+            disabled={
+              (pagination.pageIndex + 1) * pagination.pageSize >= total ||
+              isValidating
+            }
           >
             Next
           </Button>
