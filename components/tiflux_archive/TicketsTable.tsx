@@ -48,6 +48,8 @@ import {
 import useSWR from "swr";
 import { Ticket } from "@/app/tiflux/tickets";
 
+import { useRouter } from "next/navigation";
+
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export const columns: ColumnDef<Ticket>[] = [
@@ -145,7 +147,6 @@ export const columns: ColumnDef<Ticket>[] = [
     cell: ({ row }) => {
       const router = useRouter();
       const ticket = row.original;
-      const router = useRouter();
 
       return (
         <DropdownMenu>
@@ -160,10 +161,10 @@ export const columns: ColumnDef<Ticket>[] = [
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() =>
-                  navigator.clipboard.writeText(String(ticket.ticket_number))
+                  router.push(`/tiflux/${ticket.ticket_number}`)
                 }
               >
-                Copiar número do ticket
+                Abrir
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuGroup>
@@ -180,7 +181,27 @@ export const columns: ColumnDef<Ticket>[] = [
 export function TifluxTable() {
   const router = useRouter();
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const SORT_KEY = "tiflux:tickets:sorting:v1";
+
+  const [sorting, setSorting] = React.useState<SortingState>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem(SORT_KEY);
+      return raw ? (JSON.parse(raw) as SortingState) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  React.useEffect(() => {
+    try {
+      const t = setTimeout(() => {
+        localStorage.setItem(SORT_KEY, JSON.stringify(sorting));
+      }, 200);
+      return () => clearTimeout(t);
+    } catch {}
+  }, [sorting]);
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );

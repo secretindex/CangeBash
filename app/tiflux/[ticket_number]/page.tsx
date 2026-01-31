@@ -1,6 +1,5 @@
-"use server";
+"use client";
 
-<<<<<<< HEAD
 import { TicketCommunication } from "@/components/tiflux_archive/TicketComunication";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,7 +35,7 @@ const fetchTicket = async (ticket_number: string): Promise<TicketResponse> => {
     .from("ticket_answers")
     .select("*")
     .eq("ticket_number", ticket_number)
-    .order("answer_time", { ascending: true });
+    .order("answer_time", { ascending: false });
 
   return {
     ticket,
@@ -73,15 +72,15 @@ export default function TifluxTicketPage() {
           <div className="flex justify-between items-center gap-2">
             <div className="flex gap-2 items-center">
               <h2 className="text-lg font-bold">#{ticket_number}</h2>
-              <div className="text-xl text-gray-500">
+              <div className="text-xl text-zinc-800">
                 {ticket ? ticket.title : "Ticket não encontrado"}
               </div>
             </div>
             <div className="flex gap-1">
-              <Badge className="bg-violet-100 text-violet-800">
+              <Badge className="bg-sky-100 text-sky-800">
                 {ticket?.status?.name}
               </Badge>
-              <Badge className="bg-blue-100 text-blue-800">
+              <Badge className="bg-violet-100 text-violet-800">
                 {ticket?.stage?.name}
               </Badge>
             </div>
@@ -92,10 +91,10 @@ export default function TifluxTicketPage() {
               Criado em: {" "}
               {ticket
                 ? new Date(ticket.created_at).toLocaleDateString("pt-BR", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
                 : "N/A"}
             </span>
           </div>
@@ -129,13 +128,6 @@ export default function TifluxTicketPage() {
               </span>
             </div>
           </div>
-          <div>
-            <Info className="inline-block mr-2 mb-1 h-4 w-4 text-gray-500" />
-            <span className="text-gray-500">
-              Status: {ticket?.stage?.name || "N/A"} | {" "}
-              {ticket?.status?.name || "N/A"}
-            </span>
-          </div>
           <Separator className="mt-2" />
           <div className="w-full flex flex-col gap-2">
             <h3 className="text-lg font-bold">Descrição</h3>
@@ -163,27 +155,3 @@ export default function TifluxTicketPage() {
     </div>
   );
 }
-=======
-import { createClient } from "@/utils/supabase/server";
-
-const TifluxTicketPage = async ({ params }: { params: { ticket_number: string } }) => {
-  const supabase = await createClient();
-
-  const { data: ticketData, error } = await supabase
-    .from("tiflux_tickets")
-    .select("*")
-    .eq("ticket_number", params.ticket_number)
-    .single();
-
-
-  console.log("Ticket Data:", ticketData);
-
-  if (error) {
-    return <div>Error loading ticket: {error.message}</div>;
-  } else {
-    return <div>Tiflux Ticket Page {ticketData?.ticket_number} and {ticketData?.title}</div>;
-  }
-};
-
-export default TifluxTicketPage;
->>>>>>> c36e6c9c0a0292f56ed306541209d8d16e086c2b
