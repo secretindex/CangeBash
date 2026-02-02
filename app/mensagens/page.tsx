@@ -5,38 +5,48 @@ import useSWR from "swr";
 
 const fetcher = async (table: string) => {
   const client = createClient();
-  const { data, error } = await client.from(table).select("*");
+  const { data: messages, error } = await client.from(table).select("*").order("created_at", { ascending: false });
+  const { count } = await client.from(table).select("*", { count: "exact" });
 
-  console.log(data);
+  console.log(messages);
 
-  return data as Array<{
-    id: number;
-    flux_id: number;
-    card_id: string;
-    conversa_id: string;
-    created_at: string;
-  }>;
+  if (error) throw error;
+
+  return { messages, count } as {
+    messages: Array<{
+      id: number;
+      created_at: string;
+      message: object;
+    }>;
+    count: number;
+  };
 };
 
-import mockConversas from "@/components/message_api_mock";
 import MessageItemMessages from "@/components/MessageItemMessages";
 
 const MensagensFlux = () => {
-  const { data, error, isLoading, mutate } = useSWR("conversas", fetcher);
+  const { data, error, isLoading, mutate } = useSWR("conversations", fetcher);
 
-  // data.ticket.contact.name
-  // data.ticket.user.name
-  // data.ticket.queue.queue
-  // data.ticket.messages (Array)
-  // Messages 👉 msg.body
-  // msg.created_at
-  // msg.userId == null 👉 cliente não tem userId, então eu uso isso pra botar as mensagens do cliente na esquerda e do atendente na direita
+  const messages = data?.messages;
+  const innerMessages = messages?.map((message) => message.message);
 
   return (
-    <div>
-      <h2>Mensagens flux</h2>
-      <div className="flex flex-col gap-2">
-        {data &&
+    <div className="flex flex-col gap-2 w-full items-center mt-14">
+      <div className="flex border rounded-md p-4 shadow-md bg-background w-2/3 flex-col">
+        <h2 className="text-xl font-bold bg-linear-to-br from-indigo-500 to-violet-500 bg-clip-text text-transparent">Mensagens flux</h2>
+        <p className="text-sm text-neutral-600">Total de mensagens: {data?.count}</p>
+      </div>
+      <div className="flex flex-col gap-2 w-2/3 border rounded-md p-4 shadow-md bg-background">
+        {messages?.map((message) => (
+          <MessageItemMessages
+            key={message.id}
+            title={message.message!.ticket.contact.name}
+            date={new Date(message.message!.ticket.createdAt)}
+            card_id={message.message!.card_id}
+            flow_id={message.message!.flow_id}
+          />
+        ))}
+        {/* {data &&
           data!.map((con) => {
             const conversa = mockConversas.find(
               (c) => c.conversaId === con.conversa_id,
@@ -52,7 +62,7 @@ const MensagensFlux = () => {
                 flow_id={`${con.flux_id}`}
               />
             );
-          })}
+          })} */}
       </div>
     </div>
   );

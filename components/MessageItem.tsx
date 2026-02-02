@@ -17,13 +17,16 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
+import axios from "axios";
+import Link from "next/link";
+
 import { Button } from "./ui/button";
 import { useContext, useEffect } from "react";
-import axios from "axios";
+
 import { CardAndFluxContext } from "./context/CardAndFlux";
-import Link from "next/link";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
+import { TokenContext } from "./context/CangeToken";
 
 interface MessageProps {
   title: string;
@@ -32,11 +35,12 @@ interface MessageProps {
 }
 
 const MessageItem = ({ title, date, conversaId }: MessageProps) => {
+  const token = useContext(TokenContext);
   const [dia, hora] = date.toLocaleString().split(", ");
   const supabase = createClient();
 
   useEffect(() => {
-    console.log("oi");
+    console.log(token);
   }, []);
 
   const cnfContext = useContext(CardAndFluxContext);
@@ -53,7 +57,7 @@ const MessageItem = ({ title, date, conversaId }: MessageProps) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
+            Authorization: `Bearer ${token?.token}`,
           },
         },
       );

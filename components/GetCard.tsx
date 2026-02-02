@@ -13,18 +13,20 @@ import axios from "axios";
 import useSWR from "swr";
 import mockConversas from "./message_api_mock";
 import MessageItem from "./MessageItem";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { toast } from "sonner";
+import { TokenContext } from "./context/CangeToken";
 
 const fetcher = async (ids: string) => {
   const cardAndFlow = ids.split(",");
+  const token = useContext(TokenContext)
 
   const res = await axios.get(
     `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card?id_card=${cardAndFlow[0]}&flow_id=${cardAndFlow[1]}`,
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
+        Authorization: `Bearer ${token?.token}`,
       },
     },
   );
@@ -54,7 +56,7 @@ const GetCard = ({
 
   return (
     <Dialog>
-      <DialogTrigger className="cursor-pointer justify-center w-1/2 bg-violet-400 text-white flex items-center hover:bg-[#8e51ff] hover:text-white transition-all rounded-md px-2 text-sm ease-in-out">
+      <DialogTrigger className="cursor-pointer justify-center w-1/2 bg-indigo-500 text-white flex items-center hover:bg-indigo-600 hover:text-white transition-all rounded-md px-2 text-sm ease-in-out">
         Abrir Cartão
       </DialogTrigger>
       <DialogContent>

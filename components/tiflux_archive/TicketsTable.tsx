@@ -47,6 +47,7 @@ import {
 } from "lucide-react";
 import useSWR from "swr";
 import { Ticket } from "@/app/tiflux/tickets";
+import { useRouter } from "next/router";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -143,7 +144,6 @@ export const columns: ColumnDef<Ticket>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const router = useRouter();
       const ticket = row.original;
       const router = useRouter();
 
@@ -160,10 +160,10 @@ export const columns: ColumnDef<Ticket>[] = [
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() =>
-                  navigator.clipboard.writeText(String(ticket.ticket_number))
+                  router.push(`/tiflux/ticket/${ticket.ticket_number}`)
                 }
               >
-                Copiar número do ticket
+                Abrir
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuGroup>

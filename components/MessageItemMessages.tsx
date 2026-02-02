@@ -7,8 +7,9 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { TokenContext } from "./context/CangeToken";
 
 interface MessageProps {
   title: string;
@@ -27,6 +28,8 @@ const MessageItemMessages = ({
   const [cardName, setCardName] = useState<string>("");
   const [fluxName, setFluxName] = useState<string>("");
 
+  const token = useContext(TokenContext)
+
   useEffect(() => {
     axios
       .get(
@@ -34,7 +37,7 @@ const MessageItemMessages = ({
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
+            Authorization: `Bearer ${token?.token}`,
           },
         },
       )

@@ -9,6 +9,8 @@ import { BaseSyntheticEvent, useEffect, useState } from "react";
 
 import { toast } from "sonner";
 import axios from "axios";
+import { TokenContext } from "@/components/context/CangeToken";
+import { useContext } from "react";
 
 const Cadastro = () => {
   const [novoFluxo, setNovoFluxo] = useState<{
@@ -16,6 +18,8 @@ const Cadastro = () => {
     nome: string;
     formulario: string;
   }>({ fluxo_id: 0, nome: "", formulario: "" });
+
+  const token = useContext(TokenContext);
 
   const handleAddCard = async (e: BaseSyntheticEvent) => {
     const supabase = createClient();
@@ -34,7 +38,7 @@ const Cadastro = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
+            Authorization: `Bearer ${token?.token}`,
           },
         },
       );

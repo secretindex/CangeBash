@@ -12,6 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { useRouter } from "next/navigation";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -26,6 +28,7 @@ import {
   CardAndFlux,
   CardAndFluxContext,
 } from "@/components/context/CardAndFlux";
+import { TokenContext } from "@/components/context/CangeToken";
 
 const fetcher = async (table: string) => {
   const client = createClient();
@@ -44,6 +47,9 @@ const fetcher = async (table: string) => {
 export default function Home() {
   const { data, error, isLoading, mutate } = useSWR("fluxos", fetcher);
   const cnfContext = useContext(CardAndFluxContext);
+  const tokenContext = useContext(TokenContext);
+
+  const router = useRouter();
 
   const [cards, setCards] = useState<Array<any>>([]);
   const [flux, setFlux] = useState<number>();
@@ -68,11 +74,11 @@ export default function Home() {
     console.log("esse é o fluxo " + flux);
 
     const res = await axios.get(
-      process.env.NEXT_PUBLIC_CANGE_API_URL + `/card/by-flow?flow_id=${flux}`,
+      process.env.NEXT_PUBLIC_CANGE_API_URL! + `/card/by-flow?flow_id=${flux}`,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_CANGE}`,
+          Authorization: `Bearer ${tokenContext?.token}`,
         },
       },
     );
@@ -112,7 +118,7 @@ export default function Home() {
       <div className="flex flex-col w-1/3 justify-center row-start-2 items-center">
         <div className="flex flex-col w-full gap-3 border-[1px] p-8 border-[#0002] rounded-md shadow-lg">
           <div className="flex flex-col mb-4 gap-2">
-            <h1 className="text-center font-bold text-xl text-violet-500">
+            <h1 className="text-center font-bold text-xl bg-linear-to-br from-indigo-500 to-violet-500 bg-clip-text text-transparent">
               Integração CangeChat - ICC
             </h1>
           </div>
@@ -178,6 +184,9 @@ export default function Home() {
               Buscar Cartões
             </Button>
             <GetCard id_card={idCard} flow_id={flux as number} />
+          </div>
+          <div>
+            <Button variant="outline" onClick={() => router.push("/cange-token")} className="text-xs text-neutral-600 cursor-pointer w-full">Renovar token do Cange</Button>
           </div>
         </div>
       </div>
