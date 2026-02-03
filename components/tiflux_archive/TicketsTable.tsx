@@ -161,7 +161,7 @@ export const columns: ColumnDef<Ticket>[] = [
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() =>
-                  router.push(`/tiflux/ticket/${ticket.ticket_number}`)
+                  router.push(`/tiflux/${ticket.ticket_number}`)
                 }
               >
                 Abrir
@@ -180,7 +180,6 @@ export const columns: ColumnDef<Ticket>[] = [
 
 export function TifluxTable() {
   const router = useRouter();
-
   const SORT_KEY = "tiflux:tickets:sorting:v1";
 
   const [sorting, setSorting] = React.useState<SortingState>(() => {
@@ -199,7 +198,7 @@ export function TifluxTable() {
         localStorage.setItem(SORT_KEY, JSON.stringify(sorting));
       }, 200);
       return () => clearTimeout(t);
-    } catch {}
+    } catch { }
   }, [sorting]);
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -305,7 +304,7 @@ export function TifluxTable() {
             if (e.key === "Enter") {
               const value = (e.target as HTMLInputElement).value;
               if (value.trim() !== "") {
-                router.push(`/tiflux/${value.trim()}`);
+                router.push(`/${value.trim()}`);
               }
             }
           }}

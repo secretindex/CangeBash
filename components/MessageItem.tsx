@@ -71,9 +71,6 @@ const MessageItem = ({ title, date, conversaId }: MessageProps) => {
         })
         .select();
 
-      console.log(res.data);
-      console.log("from supabase  " + data);
-
       if (error) {
         toast.error(error.message);
         return;

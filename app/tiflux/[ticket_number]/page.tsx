@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/client";
-import { Calendar, Info, Mail, User2 } from "lucide-react";
+import { Calendar, Mail, User2 } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
 
 import useSWR from "swr";

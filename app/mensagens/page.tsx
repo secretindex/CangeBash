@@ -23,6 +23,7 @@ const fetcher = async (table: string) => {
 };
 
 import MessageItemMessages from "@/components/MessageItemMessages";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const MensagensFlux = () => {
   const { data, error, isLoading, mutate } = useSWR("conversations", fetcher);
@@ -37,15 +38,20 @@ const MensagensFlux = () => {
         <p className="text-sm text-neutral-600">Total de mensagens: {data?.count}</p>
       </div>
       <div className="flex flex-col gap-2 w-2/3 border rounded-md p-4 shadow-md bg-background">
-        {messages?.map((message) => (
-          <MessageItemMessages
-            key={message.id}
-            title={message.message!.ticket.contact.name}
-            date={new Date(message.message!.ticket.createdAt)}
-            card_id={message.message!.card_id}
-            flow_id={message.message!.flow_id}
-          />
-        ))}
+        <ScrollArea className="h-[300px] w-full overflow-hidden">
+          <ScrollBar orientation="vertical" className="h-full" />
+          <div className="flex flex-col gap-2">
+            {messages?.map((message) => (
+              <MessageItemMessages
+                key={message.id}
+                title={message.message!.ticket.contact.name}
+                date={new Date(message.message!.ticket.createdAt)}
+                card_id={message.message!.card_id}
+                flow_id={message.message!.flow_id}
+              />
+            ))}
+          </div>
+        </ScrollArea>
         {/* {data &&
           data!.map((con) => {
             const conversa = mockConversas.find(
@@ -63,6 +69,8 @@ const MensagensFlux = () => {
               />
             );
           })} */}
+
+
       </div>
     </div>
   );

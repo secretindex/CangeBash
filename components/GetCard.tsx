@@ -17,16 +17,13 @@ import { useContext, useEffect } from "react";
 import { toast } from "sonner";
 import { TokenContext } from "./context/CangeToken";
 
-const fetcher = async (ids: string) => {
-  const cardAndFlow = ids.split(",");
-  const token = useContext(TokenContext)
-
+const fetcher = async ([id_card, flow_id, token]: string[]) => {
   const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card?id_card=${cardAndFlow[0]}&flow_id=${cardAndFlow[1]}`,
+    `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card?id_card=${id_card}&flow_id=${flow_id}`,
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token?.token}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   );
@@ -38,15 +35,19 @@ const GetCard = ({
   id_card,
   flow_id,
 }: {
-  id_card: number;
-  flow_id: number;
+  id_card: string;
+  flow_id: string;
 }) => {
+  const token = useContext(TokenContext)
   const { data, error, isLoading, mutate } = useSWR(
-    `${id_card},${flow_id}`,
+    [id_card, flow_id, token?.token],
     fetcher,
+    {
+      revalidateOnFocus: false,
+    },
   );
 
-  console.log(data, error);
+  // change mockup to real data
 
   useEffect(() => {
     if (data === undefined) {
