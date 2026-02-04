@@ -19,7 +19,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useContext } from "react";
 
-import { Toaster } from "@/components/ui/sonner";
 import { Search } from "lucide-react";
 import GetCard from "@/components/GetCard";
 import { createClient } from "@/utils/supabase/client";
@@ -32,9 +31,7 @@ import { TokenContext } from "@/components/context/CangeToken";
 
 const fetcher = async (table: string) => {
   const client = createClient();
-  const { data, error } = await client.from(table).select("*");
-
-  console.log(data);
+  const { data } = await client.from(table).select("*");
 
   return data as Array<{
     id: number;
@@ -190,7 +187,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <Toaster />
     </div>
   );
 }

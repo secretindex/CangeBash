@@ -14,8 +14,6 @@ export async function GET(request: Request) {
 
     const supabase = await createClient();
 
-    // Build count query (head:true) to get exact total matching filters
-    // select a single indexed column for count to make the count query lighter
     let countQuery = supabase
       .from("tiflux_tickets")
       .select("ticket_number", { count: "exact", head: true });
@@ -36,12 +34,10 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: countError.message }, { status: 500 });
     }
 
-    // Build data query and apply same filters, then use range for pagination
     let dataQuery = supabase
       .from("tiflux_tickets")
       .select("*");
 
-    // apply server-side sorting if provided
     const sortFieldParam = url.searchParams.get("sortField");
     const sortDirParam = url.searchParams.get("sortDir");
     const allowedSortFields = ["ticket_number", "title", "created_at"];

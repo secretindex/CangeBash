@@ -25,19 +25,35 @@ import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Spinner } from "./ui/spinner";
 import { toast } from "sonner";
+import { createClient } from "@/utils/supabase/client";
+import useSWR from "swr";
+
+const fetcher = async (conversaId: string) => {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.from("conversations").select("*").eq("id", conversaId);
+
+  if (error) {
+    throw error;
+  }
+
+  return data[0];
+};
 
 const SummarizedText = ({ conversaId }: { conversaId: string }) => {
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { data, error } = useSWR(conversaId, fetcher);
+
+  console.log("data ", data)
 
   const handleSummarizeWithAI = async () => {
     console.log("this is ai message");
     const response = await axios.post("/api/summarize", {
-      messages: mockConversas.find((c) => c.conversaId === conversaId)!
-        .mensagens,
+      messages: data?.message?.ticket?.messages,
     });
 
-    console.log(response.data);
+    console.log("response.data ", response.data);
 
     if (response.data.aiMessage) {
       setIsLoading(false);
@@ -77,9 +93,9 @@ const SummarizedText = ({ conversaId }: { conversaId: string }) => {
                 </div>
                 <InputGroupAddon align="block-end">
                   <InputGroupButton
-                    className="ml-auto"
+                    className="ml-auto bg-transparent hover:bg-transparent text-stone-800 border border-stone-400/30"
                     size="sm"
-                    variant="default"
+                    variant="outline"
                     onClick={handleCopyMessage}
                   >
                     <Copy />

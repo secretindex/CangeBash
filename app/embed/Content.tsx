@@ -44,7 +44,6 @@ const PageEmbed = () => {
           Informações da Mensagem
         </h1>
         <div className="flex flex-col gap-3 h-4/5 overflow-clip">
-          {/* Add information about conversation and button to "resumir with AI" */}
           {mockConversas
             .find((c) => c.conversaId === conversaId)!
             .mensagens.map((mensagem, index) => {
@@ -58,6 +57,7 @@ const PageEmbed = () => {
                   }
                   name={mensagem.from}
                   message={mensagem.mensagem}
+                  isAtendente={mensagem.from === "atendente"}
                 />
               );
             })}

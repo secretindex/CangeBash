@@ -32,9 +32,10 @@ interface MessageProps {
   title: string;
   date: Date;
   conversaId: string;
+  atendente: string;
 }
 
-const MessageItem = ({ title, date, conversaId }: MessageProps) => {
+const MessageItem = ({ title, date, conversaId, atendente }: MessageProps) => {
   const token = useContext(TokenContext);
   const [dia, hora] = date.toLocaleString().split(", ");
   const supabase = createClient();
@@ -88,6 +89,9 @@ const MessageItem = ({ title, date, conversaId }: MessageProps) => {
         <ItemTitle>{title}</ItemTitle>
         <ItemDescription className="text-xs">
           Conversa realizada no dia {dia}, às {hora}
+        </ItemDescription>
+        <ItemDescription className="text-xs">
+          Atendente: {atendente}
         </ItemDescription>
       </ItemContent>
       <ItemActions>

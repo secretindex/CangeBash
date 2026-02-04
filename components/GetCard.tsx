@@ -16,8 +16,13 @@ import MessageItem from "./MessageItem";
 import { useContext, useEffect } from "react";
 import { toast } from "sonner";
 import { TokenContext } from "./context/CangeToken";
+import { createClient } from "@/utils/supabase/client";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 const fetcher = async ([id_card, flow_id, token]: string[]) => {
+  const client = createClient();
+  const { data } = await client.from("conversations").select("*").order("created_at", { ascending: false });
+
   const res = await axios.get(
     `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card?id_card=${id_card}&flow_id=${flow_id}`,
     {
@@ -28,7 +33,9 @@ const fetcher = async ([id_card, flow_id, token]: string[]) => {
     },
   );
 
-  return res.data;
+  console.log("data ", data);
+
+  return { card: res.data, messages: data };
 };
 
 const GetCard = ({
@@ -61,7 +68,7 @@ const GetCard = ({
         Abrir Cartão
       </DialogTrigger>
       <DialogContent>
-        {error || !data ? (
+        {error || !data?.card ? (
           <>
             <DialogHeader>
               <DialogTitle>Nenhum cartão selecionado!</DialogTitle>
@@ -72,23 +79,29 @@ const GetCard = ({
           </>
         ) : (
           <DialogHeader>
-            <DialogTitle>{data && data.title}</DialogTitle>
+            <DialogTitle>{data.card && data.card.title}</DialogTitle>
             <DialogDescription className="flex flex-col gap-6">
-              <span className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1">
                 <span>Adicione uma nova mensagem ao card</span>
-                <span className="flex flex-col gap-2">
-                  {mockConversas.map((conversa) => {
-                    return (
-                      <MessageItem
-                        key={conversa.conversaId}
-                        title={conversa.cliente.nome}
-                        date={new Date(conversa.criadoEm)}
-                        conversaId={conversa.conversaId}
-                      />
-                    );
-                  })}
-                </span>
-              </span>
+                <ScrollArea className="h-[300px] w-full overflow-hidden">
+                  <ScrollBar orientation="vertical" />
+                  <div className="flex flex-col gap-2">
+                    {data.messages?.map((conversa) => {
+                      return (
+                        <MessageItem
+                          key={conversa.id}
+                          title={conversa.message.ticket.contact.name}
+                          date={new Date(conversa.message.ticket.createdAt)}
+                          conversaId={conversa.id}
+                          atendente={conversa.message.ticket.user.name}
+                        />
+                      );
+                    })}
+
+                  </div>
+
+                </ScrollArea>
+              </div>
             </DialogDescription>
           </DialogHeader>
         )}

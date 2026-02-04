@@ -3,6 +3,12 @@
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
+interface MessageContent {
+  ticket: any;
+  card_id: string;
+  flow_id: string;
+}
+
 const fetcher = async (table: string) => {
   const client = createClient();
   const { data: messages, error } = await client.from(table).select("*").order("created_at", { ascending: false });
@@ -16,7 +22,7 @@ const fetcher = async (table: string) => {
     messages: Array<{
       id: number;
       created_at: string;
-      message: object;
+      message: MessageContent;
     }>;
     count: number;
   };
@@ -29,7 +35,7 @@ const MensagensFlux = () => {
   const { data, error, isLoading, mutate } = useSWR("conversations", fetcher);
 
   const messages = data?.messages;
-  const innerMessages = messages?.map((message) => message.message);
+  // const innerMessages = messages?.map((message) => message.message);
 
   return (
     <div className="flex flex-col gap-2 w-full items-center mt-14">
@@ -52,25 +58,6 @@ const MensagensFlux = () => {
             ))}
           </div>
         </ScrollArea>
-        {/* {data &&
-          data!.map((con) => {
-            const conversa = mockConversas.find(
-              (c) => c.conversaId === con.conversa_id,
-            );
-            // let cardName, fluxName;
-
-            return (
-              <MessageItemMessages
-                key={conversa!.conversaId + con.created_at}
-                title={conversa!.cliente.nome}
-                date={new Date(conversa!.criadoEm)}
-                card_id={con.card_id}
-                flow_id={`${con.flux_id}`}
-              />
-            );
-          })} */}
-
-
       </div>
     </div>
   );

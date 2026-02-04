@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       contents: `Resuma esta conversa, por favor: ${JSON.stringify(messages)}`,
       config: {
         systemInstruction:
-          "Você vai resumir mensagens nos atendimentos. Geralmente eles vão vir em um array para você, em string ou de outro jeito, mas ai você faz um resumo do que o cliente quer que seja atendido.",
+          "Você vai resumir mensagens nos atendimentos. Geralmente eles vão vir em um array para você, em string ou de outro jeito, mas ai você faz um resumo do que o cliente quer que seja atendido. O conteúdo das mensagens está no body de cada objeto. Poderá haver algumas imagens, mas elas não devem influenciar o resumo.",
       },
     });
 
