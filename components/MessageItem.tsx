@@ -86,12 +86,12 @@ const MessageItem = ({ title, date, conversaId, atendente }: MessageProps) => {
   return (
     <Item variant={"outline"} size={"sm"}>
       <ItemContent>
-        <ItemTitle>{title}</ItemTitle>
+        <ItemTitle className="text-md text-neutral-600 font-semibold">{title}</ItemTitle>
         <ItemDescription className="text-xs">
           Conversa realizada no dia {dia}, às {hora}
         </ItemDescription>
         <ItemDescription className="text-xs">
-          Atendente: {atendente}
+          Atendente: <span className="text-neutral-800 font-semibold">{atendente}</span>
         </ItemDescription>
       </ItemContent>
       <ItemActions>

@@ -2,6 +2,7 @@ import { Clock, MessageCircle, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 
 import Link from "next/link";
+import SignOut from "./SignOutComponent";
 
 const Header = () => {
   return (
@@ -35,6 +36,7 @@ const Header = () => {
             Histórico de Tickets
           </Button>
         </Link>
+        <SignOut />
       </div>
     </header>
   );

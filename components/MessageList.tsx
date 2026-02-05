@@ -5,20 +5,21 @@ interface MessageProps {
   message: string;
   time: string;
   isAtendente: boolean;
+  isBot: boolean;
   mediaUrl?: string;
 }
 
-const MessageList: React.FC<MessageProps> = ({ name, message, time, isAtendente, mediaUrl }) => {
+const MessageList: React.FC<MessageProps> = ({ name, message, time, isAtendente, isBot, mediaUrl }) => {
   return (
     <div
       className={
         "flex flex-col gap-1 w-full max-w-[320px] " +
-        `${isAtendente && "self-end"}`
+        `${isAtendente && !isBot ? "self-end" : "self-start"}`
       }
     >
       <div className="flex items-center space-x-2 rtl:space-x-reverse">
-        <span className="text-sm font-semibold text-gray-900 dark:text-white">
-          {name}
+        <span className={`text-sm font-semibold ${isBot ? "text-indigo-600" : "text-gray-900"}`}>
+          {isBot ? "ChatBot" : name}
         </span>
         <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
           {time}

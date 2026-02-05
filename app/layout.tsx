@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import CardAndFluxContextProvider from "@/components/context/CardAndFlux";
 import { TokenProvider } from "@/components/context/CangeToken";
 import { Toaster } from "sonner";
+import UserSessionContext from "@/components/context/UserSession";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,18 +43,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-br">
       <TokenProvider>
         <CardAndFluxContextProvider>
-          <body
-            className={`${ubuntu.variable} ${ubuntuMono.variable} antialiased min-h-screen`}
-          >
-            <Header />
-            <main className="min-h-screen pt-14 flex items-center justify-center">
-              {children}
-              <Toaster />
-            </main>
-          </body>
+          <UserSessionContext>
+            <body
+              className={`${ubuntu.variable} ${ubuntuMono.variable} antialiased min-h-screen`}
+            >
+              <Header />
+              <main className="min-h-screen pt-14 flex items-center justify-center">
+                {children}
+                <Toaster />
+              </main>
+            </body>
+          </UserSessionContext>
         </CardAndFluxContextProvider>
       </TokenProvider>
     </html>

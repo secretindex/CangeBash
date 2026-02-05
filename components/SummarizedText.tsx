@@ -27,6 +27,7 @@ import { Spinner } from "./ui/spinner";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
+import ReactMarkdown from "react-markdown";
 
 const fetcher = async (conversaId: string) => {
   const supabase = createClient();
@@ -88,7 +89,11 @@ const SummarizedText = ({ conversaId }: { conversaId: string }) => {
                       Gerando resumo
                     </div>
                   ) : (
-                    message
+                    <div className="markdown-body">
+                      <ReactMarkdown>
+                        {message as string}
+                      </ReactMarkdown>
+                    </div>
                   )}
                 </div>
                 <InputGroupAddon align="block-end">

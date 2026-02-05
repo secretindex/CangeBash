@@ -37,11 +37,12 @@ const ContentMessage = () => {
           <ScrollBar orientation="vertical" />
           <div className="flex flex-col gap-2">
             {/* Add information about conversation and button to "resumir with AI" */}
-            {data?.message?.ticket?.messages.map((mensagem: any) => {
+            {data?.message?.ticket?.messages.sort((a: any, b: any) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()).map((mensagem: any) => {
               return (
                 <MessageList
                   key={mensagem.id}
                   isAtendente={mensagem.userId === null ? false : true}
+                  isBot={mensagem.sendType === "bot" ? true : false}
                   time={
                     new Date(mensagem.updatedAt)
                       .toLocaleString()

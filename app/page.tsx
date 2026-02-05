@@ -78,9 +78,12 @@ export default function Home() {
           Authorization: `Bearer ${tokenContext?.token}`,
         },
       },
-    );
+    )
 
-    console.log(res.data);
+    if (res.status === 401) {
+      toast.error("Token expirado. Peça para o administrador atualizar o token.");
+      return;
+    }
 
     if (res.data.length <= 0) {
       toast.error("Nenhum cartão foi encontrado neste fluxo");

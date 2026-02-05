@@ -54,8 +54,6 @@ const GetCard = ({
     },
   );
 
-  // change mockup to real data
-
   useEffect(() => {
     if (data === undefined) {
       toast.error("Nenhum cartão foi encontrado!");
