@@ -7,21 +7,37 @@ import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 import { BaseSyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
 
   const handleLogin = async () => {
-    const supabase = createClient();
-    await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+    setLoading(true);
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
     });
 
-    router.push("/");
+    const { data, error } = await response.json();
+
+    console.log(data, error)
+
+    if (error) {
+      toast.error(error.message.includes("Invalid") ? "Email ou senha inválidos" : error.message);
+    } else {
+      toast.success("Login realizado com sucesso");
+      router.push("/");
+    }
   }
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full">
@@ -39,7 +55,7 @@ export default function SignInPage() {
             <Label>Senha</Label>
             <Input type="password" placeholder="Senha" value={password} onChange={(val: BaseSyntheticEvent) => setPassword(val.target.value)} />
           </div>
-          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white" onClick={handleLogin}>Entrar</Button>
+          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white" onClick={handleLogin} disabled={loading}>{loading ? <Spinner /> : "Entrar"}</Button>
           <Button variant="link" className="text-center">Esqueci minha senha</Button>
         </CardContent>
       </Card>
