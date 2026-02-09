@@ -68,7 +68,7 @@ export default function TifluxTicketPage() {
         &larr; Voltar ao Acervo
       </Button>
       <div id="general-info header" className="flex flex-col w-11/12 gap-4">
-        <div className="flex flex-col justify-center gap-2 rounded-md border shadow-sm p-4 w-full">
+        <div className="flex flex-col bg-primary-foreground justify-center gap-2 rounded-md border shadow-sm p-4 w-full">
           <div className="flex justify-between items-center gap-2">
             <div className="flex gap-2 items-center">
               <h2 className="text-lg font-bold">#{ticket_number}</h2>
@@ -86,8 +86,8 @@ export default function TifluxTicketPage() {
             </div>
           </div>
           <div>
-            <Calendar className="inline-block mr-2 mb-1 h-4 w-4 text-gray-500" />
-            <span className="text-gray-500">
+            <Calendar className="inline-block mr-2 mb-1 h-4 w-4 text-muted-foreground" />
+            <span className="text-muted-foreground">
               Criado em: {" "}
               {ticket
                 ? new Date(ticket.created_at).toLocaleDateString("pt-BR", {
@@ -100,30 +100,30 @@ export default function TifluxTicketPage() {
           </div>
           <div className="flex gap-3">
             <div>
-              <User2 className="inline-block mr-2 mb-1 h-4 w-4 text-gray-500" />
-              <span className="text-gray-500">
+              <User2 className="inline-block mr-2 mb-1 h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
                 Responsável: {ticket?.responsible?.name || "N/A"}
               </span>
             </div>
             <div>
-              <User2 className="inline-block mr-2 mb-1 h-4 w-4 text-gray-500" />
-              <span className="text-gray-500">
+              <User2 className="inline-block mr-2 mb-1 h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
                 Cliente: {ticket?.client?.name || "N/A"}
               </span>
             </div>
           </div>
           <div className="flex">
             <div className="">
-              <Mail className="inline-block mr-2 mb-1 h-4 w-4 text-gray-500" />
-              <span className="text-gray-500">
+              <Mail className="inline-block mr-2 mb-1 h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
                 Solicitante: {" "}
                 {ticket?.requestor?.email || ticket?.requestor?.name || "N/A"}
               </span>
             </div>
             <span className="mx-4">|</span>
             <div>
-              <Mail className="inline-block mr-2 mb-1 h-4 w-4 text-gray-500" />
-              <span className="text-gray-500">
+              <Mail className="inline-block mr-2 mb-1 h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">
                 Seguidores: {ticket?.followers?.replace(",", ", ") || "N/A"}
               </span>
             </div>
@@ -132,7 +132,7 @@ export default function TifluxTicketPage() {
           <div className="w-full flex flex-col gap-2">
             <h3 className="text-lg font-bold">Descrição</h3>
             <div
-              className="text-gray-600 text-[0.905rem]"
+              className="text-muted-foreground text-[0.905rem]"
               dangerouslySetInnerHTML={{
                 __html:
                   description?.description || "Nenhuma descrição disponível.",
@@ -140,10 +140,10 @@ export default function TifluxTicketPage() {
             />
           </div>
         </div>
-        <div className="border rounded-md shadow-sm p-4 ">
+        <div className="border rounded-md shadow-sm p-4 bg-primary-foreground">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-bold mb-4">Comunicação</h3>
-            <Badge className="mb-4 bg-green-200 text-zinc-800">
+            <Badge className="mb-4 bg-primary text-white">
               {communications?.length || 0} Mensagens
             </Badge>
           </div>

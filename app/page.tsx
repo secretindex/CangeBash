@@ -115,16 +115,17 @@ export default function Home() {
 
   return (
     <div className="font-sans w-full grid grid-rows-[20px_1fr_20px] items-center justify-items-center h-full p-8 pb-20 gap-16 sm:p-20">
-      <div className="flex flex-col w-1/3 justify-center row-start-2 items-center">
-        <div className="flex flex-col min-w-md gap-3 bg-background md:w-2/4 sm:w-2/3 border-[1px] p-8 border-[#0002] rounded-md shadow-lg">
+      <div className="flex flex-col w-1/3 bg-primary-foreground justify-center row-start-2 items-center">
+        <div className="flex flex-col min-w-md gap-3 bg-card md:w-2/4 sm:w-2/3 border-[1px] p-8 border-[#0002] rounded-md shadow-lg">
           <div className="flex flex-col mb-4 gap-2">
-            <h1 className="text-center font-bold text-xl bg-linear-to-br from-indigo-500 to-violet-500 bg-clip-text text-transparent">
+            <h1 className="text-center font-bold text-xl text-primary">
               Integração CangeChat - ICC
             </h1>
+            <span className="text-center text-sm text-muted-foreground">Adicione uma conversa a um cartão existente</span>
           </div>
           <div className="flex flex-col gap-1">
             <div>
-              <label className="text-sm text-neutral-600">
+              <label className="text-sm text-secondary-foreground">
                 Selecione um Fluxo
               </label>
               <Select onValueChange={handleSelectFlux}>
@@ -146,8 +147,8 @@ export default function Home() {
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <label className="text-sm text-neutral-600">
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-secondary-foreground">
                 Selecione um cartão
               </label>
               <Select onValueChange={handleSelectCards}>
@@ -177,7 +178,7 @@ export default function Home() {
           <div className="flex w-full flex-row gap-1">
             <Button
               variant="outline"
-              className="cursor-pointer w-1/2 hover:bg-[#3331] transition-all ease-in-out"
+              className="cursor-pointer w-1/2 transition-all ease-in-out"
               onClick={handleGetCards}
             >
               <Search />
@@ -186,7 +187,7 @@ export default function Home() {
             <GetCard id_card={`${idCard}`} flow_id={`${flux}`} />
           </div>
           <div>
-            <Button variant="outline" onClick={() => router.push("/cange-token")} className="text-xs text-neutral-600 cursor-pointer w-full">Renovar token do Cange</Button>
+            <Button variant="outline" onClick={() => router.push("/cange-token")} className="text-xs text-secondary-foreground cursor-pointer w-full">Renovar token do Cange</Button>
           </div>
         </div>
       </div>

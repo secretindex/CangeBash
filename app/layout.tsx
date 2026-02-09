@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { Ubuntu, Ubuntu_Mono } from "next/font/google";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 import "./globals.css";
 import Header from "@/components/Header";
@@ -47,15 +48,22 @@ export default function RootLayout({
       <TokenProvider>
         <CardAndFluxContextProvider>
           <UserSessionContext>
-            <body
-              className={`${ubuntu.variable} ${ubuntuMono.variable} antialiased min-h-screen`}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
             >
-              <Header />
-              <main className="min-h-screen pt-14 flex items-center justify-center">
-                {children}
-                <Toaster />
-              </main>
-            </body>
+              <body
+                className={`${ubuntu.variable} ${ubuntuMono.variable} bg-background text-foreground antialiased min-h-screen`}
+              >
+                <Header />
+                <main className="min-h-screen pt-14 bg-background text-foreground flex items-center justify-center">
+                  {children}
+                  <Toaster />
+                </main>
+              </body>
+            </ThemeProvider>
           </UserSessionContext>
         </CardAndFluxContextProvider>
       </TokenProvider>

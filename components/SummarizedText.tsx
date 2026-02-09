@@ -72,7 +72,7 @@ const SummarizedText = ({ conversaId }: { conversaId: string }) => {
       <Dialog>
         <DialogTrigger
           onClick={handleSummarizeWithAI}
-          className="cursor-pointer w-full justify-center border-[1px] border-stone-500/30 text-black flex transition-all duration-300 -out items-center hover:bg-[#ddd5] text-sm gap-2 p-2 rounded-md ease-in-out"
+          className="cursor-pointer w-full justify-center border-[1px] border-stone-500/30 text-primary flex transition-all duration-300 -out items-center hover:bg-[#ddd5] text-sm gap-2 p-2 rounded-md ease-in-out"
         >
           Resumir o texto com <b>IA</b>
           <Sparkles size={"16px"} />
@@ -82,7 +82,7 @@ const SummarizedText = ({ conversaId }: { conversaId: string }) => {
             <DialogTitle>Resumo do atendimento</DialogTitle>
             <DialogDescription>
               <InputGroup>
-                <div className="p-2 text-stone-700">
+                <div className="p-2 text-primary">
                   {isLoading ? (
                     <div className="flex gap-1 items-center text-sm">
                       <Spinner />
@@ -98,7 +98,7 @@ const SummarizedText = ({ conversaId }: { conversaId: string }) => {
                 </div>
                 <InputGroupAddon align="block-end">
                   <InputGroupButton
-                    className="ml-auto bg-transparent hover:bg-transparent text-stone-800 border border-stone-400/30"
+                    className="ml-auto bg-transparent hover:bg-transparent text-primary border border-stone-400/30"
                     size="sm"
                     variant="outline"
                     onClick={handleCopyMessage}

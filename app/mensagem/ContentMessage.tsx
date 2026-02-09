@@ -30,7 +30,7 @@ const ContentMessage = () => {
   console.log("data ", data)
 
   return (
-    <div className="h-full min-w-md w-2xl p-8 py-4 flex flex-col gap-8 shadow-md justify-between rounded-md border-[1px] border-stone-400/50">
+    <div className="h-full min-w-md w-2xl p-8 py-4 bg-card flex flex-col gap-8 shadow-md justify-between rounded-md border-[1px] border-stone-400/50">
       <h1 className="text-center text-xl font-bold">Informações da Mensagem</h1>
       <div className="flex flex-col gap-3 h-4/5 overflow-clip">
         <ScrollArea className="h-[400px] w-full overflow-hidden">
@@ -41,6 +41,7 @@ const ContentMessage = () => {
               return (
                 <MessageList
                   key={mensagem.id}
+                  messageId={mensagem.id}
                   isAtendente={mensagem.userId === null ? false : true}
                   isBot={mensagem.sendType === "bot" ? true : false}
                   time={

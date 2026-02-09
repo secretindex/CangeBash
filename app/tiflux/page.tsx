@@ -8,9 +8,9 @@ const TifluxPage = () => {
   return (
     <section className="min-h-screen w-full py-10 flex flex-col items-center">
       <div className="w-3/4 gap-4 flex flex-col">
-        <div className="mb-4 w-full">
+        <div className="w-full">
           <h2 className="text-2xl font-bold">Acervo Tiflux</h2>
-          <span className="text-gray-500">
+          <span className="text-muted-foreground">
             Onde estão todos os tickets do antigo sistema Tiflux
           </span>
         </div>

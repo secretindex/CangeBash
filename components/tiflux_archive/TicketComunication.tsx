@@ -92,7 +92,7 @@ export function TicketCommunication({ messages }: TicketCommunicationProps) {
                           {attachments.map((file) => (
                             <a
                               key={file.id}
-                              href={file.url}
+                              href={file.url.split("?")[0]}
                               target="_blank"
                               rel="noopener noreferrer"
                               download

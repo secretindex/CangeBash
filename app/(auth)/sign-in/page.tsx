@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
@@ -30,10 +30,11 @@ export default function SignInPage() {
 
     const { data, error } = await response.json();
 
-    console.log(data, error)
+    console.log(error)
 
     if (error) {
-      toast.error(error.message.includes("Invalid") ? "Email ou senha inválidos" : error.message);
+      toast.error(error);
+      setLoading(false);
     } else {
       toast.success("Login realizado com sucesso");
       router.push("/");
@@ -41,7 +42,7 @@ export default function SignInPage() {
   }
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full">
-      <Card className="w-full max-w-md">
+      <Card className="w-full bg-primary-foreground dark:bg-card max-w-md">
         <CardHeader>
           <CardTitle className="text-xl font-bold">Login</CardTitle>
           <CardDescription>Faça login na sua conta</CardDescription>
@@ -55,9 +56,14 @@ export default function SignInPage() {
             <Label>Senha</Label>
             <Input type="password" placeholder="Senha" value={password} onChange={(val: BaseSyntheticEvent) => setPassword(val.target.value)} />
           </div>
-          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white" onClick={handleLogin} disabled={loading}>{loading ? <Spinner /> : "Entrar"}</Button>
+          <Button variant={"default"} onClick={handleLogin} disabled={loading}>{loading ? <Spinner /> : "Entrar"}</Button>
           <Button variant="link" className="text-center">Esqueci minha senha</Button>
         </CardContent>
+        <CardFooter>
+          <Button variant="link" onClick={() => {
+            window.open("https://wa.me/5581985053082?text=Oi,%20Caio!%20Por%20favor,%20cria%20minha%20conta%20no%20CangeBash!", "_blank");
+          }} className="text-xs text-destructive w-full">Não tenho conta</Button>
+        </CardFooter>
       </Card>
     </div>
   );

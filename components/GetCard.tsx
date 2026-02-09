@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "./ui/button";
 
 import axios from "axios";
 import useSWR from "swr";
@@ -21,7 +22,10 @@ import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 const fetcher = async ([id_card, flow_id, token]: string[]) => {
   const client = createClient();
-  const { data } = await client.from("conversations").select("*").order("created_at", { ascending: false });
+  const { data } = await client
+    .from("conversations")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   const res = await axios.get(
     `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card?id_card=${id_card}&flow_id=${flow_id}`,
@@ -45,7 +49,7 @@ const GetCard = ({
   id_card: string;
   flow_id: string;
 }) => {
-  const token = useContext(TokenContext)
+  const token = useContext(TokenContext);
   const { data, error, isLoading, mutate } = useSWR(
     [id_card, flow_id, token?.token],
     fetcher,
@@ -62,8 +66,8 @@ const GetCard = ({
 
   return (
     <Dialog>
-      <DialogTrigger className="cursor-pointer justify-center w-1/2 bg-indigo-500 text-white flex items-center hover:bg-indigo-600 hover:text-white transition-all rounded-md px-2 text-sm ease-in-out">
-        Abrir Cartão
+      <DialogTrigger asChild>
+        <Button className="w-1/2 cursor-pointer">Abrir Cartão</Button>
       </DialogTrigger>
       <DialogContent>
         {error || !data?.card ? (
@@ -95,9 +99,7 @@ const GetCard = ({
                         />
                       );
                     })}
-
                   </div>
-
                 </ScrollArea>
               </div>
             </DialogDescription>

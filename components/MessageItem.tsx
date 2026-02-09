@@ -53,7 +53,7 @@ const MessageItem = ({ title, date, conversaId, atendente }: MessageProps) => {
         {
           card_id: cnfContext?.cardAndFlux?.cardId,
           flow_id: cnfContext?.cardAndFlux?.fluxId,
-          description: `A mensagem do link ${conversaId}, conversa com ${title} no dia ${dia}, às ${hora}, foi associada ao cartão!`,
+          description: `A mensagem do link "https://cange-bash-integra.vercel.app/mensagem?conversa_id=${conversaId}", conversa com ${title} no dia ${dia}, às ${hora}, foi associada ao cartão!`,
         },
         {
           headers: {
@@ -76,6 +76,9 @@ const MessageItem = ({ title, date, conversaId, atendente }: MessageProps) => {
         toast.error(error.message);
         return;
       }
+
+      console.log(res.data);
+      console.log(data);
 
       toast.success("mensagem adicionada ao cartão");
     } catch (error) {

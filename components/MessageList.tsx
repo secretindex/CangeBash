@@ -1,15 +1,26 @@
+"use client";
+
 import ReactMarkdown from "react-markdown";
 
 interface MessageProps {
   name: string;
   message: string;
+  messageId: string;
   time: string;
   isAtendente: boolean;
   isBot: boolean;
   mediaUrl?: string;
 }
 
-const MessageList: React.FC<MessageProps> = ({ name, message, time, isAtendente, isBot, mediaUrl }) => {
+const MessageList: React.FC<MessageProps> = ({
+  name,
+  message,
+  messageId,
+  time,
+  isAtendente,
+  isBot,
+  mediaUrl,
+}) => {
   return (
     <div
       className={
@@ -18,23 +29,22 @@ const MessageList: React.FC<MessageProps> = ({ name, message, time, isAtendente,
       }
     >
       <div className="flex items-center space-x-2 rtl:space-x-reverse">
-        <span className={`text-sm font-semibold ${isBot ? "text-indigo-600" : "text-gray-900"}`}>
+        <span
+          className={`text-sm font-semibold ${isBot ? "text-primary" : "text-foreground"}`}
+        >
           {isBot ? "ChatBot" : name}
         </span>
-        <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+        <span className="text-xs font-normal text-muted-foreground">
           {time}
         </span>
       </div>
       <div
-        className={`flex flex-col leading-1.5 p-3 border-gray-200 ${!isAtendente ? "bg-gray-100" : "bg-indigo-100"} markdown-body rounded-e-xl rounded-es-xl dark:bg-gray-700 prose prose-sm max-w-none leading-relaxed break-words`}
+        className={`flex flex-col leading-1.5 p-3 border-border ${!isAtendente ? "bg-muted" : "bg-primary/10"} markdown-body rounded-e-xl rounded-es-xl prose prose-sm max-w-none leading-relaxed break-words`}
       >
-        <ReactMarkdown >
-          {message as string}
-        </ReactMarkdown>
-        {mediaUrl && (
-          <img src={mediaUrl} alt="" className="w-full h-full" />
-        )}
+        <ReactMarkdown>{message as string}</ReactMarkdown>
+        {mediaUrl && <img src={mediaUrl} alt="" className="w-full h-full" />}
       </div>
+      
     </div>
   );
 };

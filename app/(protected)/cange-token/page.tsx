@@ -90,22 +90,22 @@ export default function CangeToken() {
 
   return (
     <div className="flex flex-col gap-2 w-full items-center mt-14">
-      <Card className="w-full max-w-md">
+      <Card className="w-full bg-card max-w-md">
         <CardHeader>
-          <CardTitle className="text-xl font-bold">
+          <CardTitle className="text-xl text-primary font-bold">
             Inserir Token da API do Cange
           </CardTitle>
-          <CardDescription className="text-sm text-neutral-600">Crie um novo Token no Cange e cole aqui. Ele atualiza automaticamente.</CardDescription>
+          <CardDescription className="text-sm text-muted-foreground">Crie um novo Token no Cange e cole aqui. Ele atualiza automaticamente.</CardDescription>
         </CardHeader>
         <CardContent>
-          <CardDescription className="text-sm text-neutral-600">
-            <div className="rounded-md bg-neutral-100 p-2 overflow-hidden">
-              <p className="text-sm text-neutral-800 font-bold truncate">Token ativo:</p>
+          <CardDescription className="text-sm text-secondary-foreground">
+            <div className="rounded-md bg-muted p-2 overflow-hidden">
+              <p className="text-sm text-primary font-bold truncate">Token ativo:</p>
 
-              <p className="text-sm text-neutral-500 truncate">{tokenContext?.token}</p>
-              <p className="text-sm text-neutral-900 truncate">Criado em: {new Date(tokenContext?.created_at!).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</p>
+              <p className="text-sm text-muted-foreground truncate">{tokenContext?.token}</p>
+              <p className="text-sm text-muted-foreground truncate">Criado em: {new Date(tokenContext?.created_at!).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</p>
 
-              <p className="text-sm text-orange-600 truncate">Expira em: {new Date(new Date(tokenContext?.created_at!).getTime() + 8 * 60 * 60 * 1000).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</p>
+              <p className="text-sm text-destructive truncate">Expira em: {new Date(new Date(tokenContext?.created_at!).getTime() + 8 * 60 * 60 * 1000).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</p>
             </div>
           </CardDescription>
         </CardContent>

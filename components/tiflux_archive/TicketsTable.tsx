@@ -286,7 +286,7 @@ export function TifluxTable() {
           onChange={(event) => {
             setRawTicket(event.target.value);
           }}
-          className="max-w-xs mr-4"
+          className="max-w-xs bg-primary-foreground mr-4"
         />
         <Input
           placeholder="Filtrar por título..."
@@ -294,28 +294,28 @@ export function TifluxTable() {
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm bg-primary-foreground"
         />
         <Input
           placeholder="Ir para o ticket"
-          className="max-w-xs ml-4"
+          className="max-w-xs ml-4 bg-primary-foreground"
           type="number"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               const value = (e.target as HTMLInputElement).value;
               if (value.trim() !== "") {
-                router.push(`/${value.trim()}`);
+                router.push(`/tiflux/${value.trim()}`);
               }
             }
           }}
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto bg-primary-foreground">
               Colunas <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="bg-primary-foreground">
             <DropdownMenuGroup>
               {table
                 .getAllColumns()
@@ -340,12 +340,12 @@ export function TifluxTable() {
 
       <div className="overflow-hidden rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-primary-foreground">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="bg-primary-foreground">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="bg-primary-foreground">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -359,7 +359,7 @@ export function TifluxTable() {
             ))}
           </TableHeader>
 
-          <TableBody>
+          <TableBody className="bg-primary-foreground">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

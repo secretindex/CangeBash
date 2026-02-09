@@ -40,11 +40,11 @@ const MensagensFlux = () => {
   return (
     <div className="flex flex-col gap-2 w-full items-center mt-14">
       <div className="flex border rounded-md p-4 shadow-md bg-background w-2/3 flex-col">
-        <h2 className="text-xl font-bold bg-linear-to-br from-indigo-500 to-violet-500 bg-clip-text text-transparent">Mensagens do Atendimento</h2>
-        <p className="text-sm text-neutral-600">Total de mensagens: {data?.count}</p>
+        <h2 className="text-xl font-bold text-primary">Mensagens do Atendimento</h2>
+        <p className="text-sm text-muted-foreground">Total de mensagens: {data?.count}</p>
       </div>
       <div className="flex flex-col gap-2 w-2/3 border rounded-md p-4 shadow-md bg-background">
-        <ScrollArea className="h-[300px] w-full overflow-hidden">
+        <ScrollArea className="h-[400px] w-full overflow-hidden">
           <ScrollBar orientation="vertical" className="h-full" />
           <div className="flex flex-col gap-2">
             {
@@ -60,6 +60,7 @@ const MensagensFlux = () => {
                     key={message.id}
                     title={message.message!.ticket.contact.name}
                     date={new Date(message.message!.ticket.createdAt)}
+                    messageId={message.id}
                     card_id={message.message!.card_id}
                     flow_id={message.message!.flow_id}
                   />

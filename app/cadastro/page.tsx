@@ -73,7 +73,7 @@ const Cadastro = () => {
         <div className="w-1/3 flex flex-col gap-2 p-6 border-[1px] border-indigo-300/50 rounded-md">
           <form className="flex flex-col gap-3">
             <div>
-              <h1 className="text-center text-indigo-400 font-bold text-lg">
+              <h1 className="text-center text-primary font-bold text-lg">
                 Adicione um Fluxo
               </h1>
             </div>
