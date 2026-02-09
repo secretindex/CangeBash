@@ -4,39 +4,38 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createClient } from "@/utils/supabase/client";
 import { BaseSyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const supabase = createClient();
+
   const router = useRouter();
 
   const handleLogin = async () => {
     setLoading(true);
 
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
 
-    const { data, error } = await response.json();
-
-    console.log(error)
+    console.log(data, error)
 
     if (error) {
-      toast.error(error);
+      toast.error(error.message);
       setLoading(false);
     } else {
       toast.success("Login realizado com sucesso");
+
+      setLoading(false);
       router.push("/");
     }
   }
