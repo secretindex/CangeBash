@@ -1,7 +1,6 @@
 "use client";
 
 // import axios from "axios";
-import mockConversas from "@/components/message_api_mock";
 import MessageList from "@/components/MessageList";
 import { Toaster } from "@/components/ui/sonner";
 import SummarizedText from "@/components/SummarizedText";
@@ -10,11 +9,30 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
 
+import useSWR from "swr";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollBar } from "@/components/ui/scroll-area";
+
+const fetcher = async (conversa_id: string) => {
+  const supabase = createClient();
+  const { data, error } = await supabase.from("conversations").select("*").eq("id", conversa_id);
+
+  if (error) {
+    throw error;
+  }
+
+  return data[0];
+};
+
 const PageEmbed = () => {
   const searchParams = useSearchParams();
   const fluxId = searchParams.get("flux_id");
   const conversaId = searchParams.get("conversa_id");
   const [formLink, setFormLink] = useState<string>("");
+
+  const { data, error, isLoading } = useSWR(conversaId, fetcher);
+
+  console.log("data ", data)
 
   useEffect(() => {
     const supabase = createClient();
@@ -44,30 +62,36 @@ const PageEmbed = () => {
           Informações da Mensagem
         </h1>
         <div className="flex flex-col gap-3 h-4/5 overflow-clip">
-          {mockConversas
-            .find((c) => c.conversaId === conversaId)!
-            .mensagens.map((mensagem, index) => {
-              return (
-                <MessageList
-                  key={index}
-                  time={
-                    new Date(mensagem.sentAt)
-                      .toLocaleString()
-                      .split(", ")[1] as string
-                  }
-                  name={mensagem.from}
-                  message={mensagem.mensagem}
-                  isAtendente={mensagem.from === "atendente"}
-                />
-              );
-            })}
+          <ScrollArea className="h-[400px] w-full overflow-hidden">
+            <ScrollBar orientation="vertical" />
+            <div className="flex flex-col gap-2">
+              {data?.message?.ticket?.messages.sort((a: any, b: any) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()).map((mensagem: any) => {
+                return (
+                  <MessageList
+                    key={mensagem.id}
+                    messageId={mensagem.id}
+                    time={
+                      new Date(mensagem.updatedAt)
+                        .toLocaleString()
+                        .split(", ")[1] as string
+                    }
+                    name={mensagem.userId === null ? data?.message?.ticket?.contact?.name : data?.message?.ticket?.user?.name}
+                    message={mensagem.body}
+                    isAtendente={mensagem.userId === null ? false : true}
+                    mediaUrl={mensagem.mediaUrl}
+                    isBot={mensagem.sendType === "bot" ? true : false}
+                  />
+                );
+              })}
+            </div>
+          </ScrollArea>
         </div>
         <div>
           <SummarizedText conversaId={conversaId as string} />
         </div>
       </div>
       <Toaster />
-    </section>
+    </section >
   );
 };
 

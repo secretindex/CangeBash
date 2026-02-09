@@ -115,7 +115,7 @@ export default function Home() {
 
   return (
     <div className="font-sans w-full grid grid-rows-[20px_1fr_20px] items-center justify-items-center h-full p-8 pb-20 gap-16 sm:p-20">
-      <div className="flex flex-col w-1/3 bg-primary-foreground justify-center row-start-2 items-center">
+      <div className="flex flex-col w-1/3 justify-center row-start-2 items-center">
         <div className="flex flex-col min-w-md gap-3 bg-card md:w-2/4 sm:w-2/3 border-[1px] p-8 border-[#0002] rounded-md shadow-lg">
           <div className="flex flex-col mb-4 gap-2">
             <h1 className="text-center font-bold text-xl text-primary">
