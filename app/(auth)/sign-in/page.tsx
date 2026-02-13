@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { createClient } from "@/utils/supabase/client";
+import axios from "axios";
+import { signIn } from "./actions";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
@@ -22,15 +24,12 @@ export default function SignInPage() {
   const handleLogin = async () => {
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const data = await signIn(email, password);
 
-    console.log(data, error)
+    console.log(data)
 
-    if (error) {
-      toast.error(error.message);
+    if (data.error) {
+      toast.error(data.error);
       setLoading(false);
     } else {
       toast.success("Login realizado com sucesso");
