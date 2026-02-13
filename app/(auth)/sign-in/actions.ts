@@ -13,7 +13,5 @@ export async function signIn(email: string, password: string) {
         return { error: error.message };
     }
 
-    await supabase.auth.refreshSession()
-
     return { data };
 }
