@@ -45,28 +45,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <TokenProvider>
-        <CardAndFluxContextProvider>
-          <UserSessionContext>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <body
-                className={`${ubuntu.variable} ${ubuntuMono.variable} bg-background text-foreground antialiased min-h-screen`}
+      <body
+        className={`${ubuntu.variable} ${ubuntuMono.variable} bg-background text-foreground antialiased min-h-screen`}
+      >
+        <TokenProvider>
+          <CardAndFluxContextProvider>
+            <UserSessionContext>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
               >
                 <Header />
                 <main className="min-h-screen pt-14 bg-background text-foreground flex items-center justify-center">
                   {children}
                   <Toaster />
                 </main>
-              </body>
-            </ThemeProvider>
-          </UserSessionContext>
-        </CardAndFluxContextProvider>
-      </TokenProvider>
+              </ThemeProvider>
+            </UserSessionContext>
+          </CardAndFluxContextProvider>
+        </TokenProvider>
+      </body>
     </html>
   );
 }
