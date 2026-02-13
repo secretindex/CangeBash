@@ -71,7 +71,7 @@ export default function Home() {
     console.log("esse é o fluxo " + flux);
 
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card/by-flow?flow_id=${flux}`,
+      `https://api.cange.me/card/by-flow?flow_id=${flux}`,
       {
         headers: {
           "Content-Type": "application/json",
