@@ -4,7 +4,7 @@
 import MessageList from "@/components/MessageList";
 import { Toaster } from "@/components/ui/sonner";
 import SummarizedText from "@/components/SummarizedText";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
@@ -12,6 +12,8 @@ import { Spinner } from "@/components/ui/spinner";
 import useSWR from "swr";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ScrollBar } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Home } from "lucide-react";
 
 const fetcher = async (conversa_id: string) => {
   const supabase = createClient();
@@ -29,6 +31,8 @@ const PageEmbed = () => {
   const fluxId = searchParams.get("flux_id");
   const conversaId = searchParams.get("conversa_id");
   const [formLink, setFormLink] = useState<string>("");
+
+  const router = useRouter();
 
   const { data, error, isLoading } = useSWR(conversaId, fetcher);
 
@@ -58,9 +62,14 @@ const PageEmbed = () => {
       </div>
 
       <div className="h-full w-2/5 p-2 py-4 flex flex-col shadow-md justify-between rounded-md border-[1px] border-stone-400/50">
-        <h1 className="text-center text-xl font-bold">
-          Informações da Mensagem
-        </h1>
+        <div className="flex px-3 items-center">
+          <h1 className="text-center flex-1 text-xl font-bold">
+            Informações da Mensagem
+          </h1>
+          <Button variant={"link"} className="cursor-pointer" onClick={() => router.push("/")}>
+            <Home />
+          </Button>
+        </div>
         <div className="flex flex-col gap-3 h-4/5 overflow-clip">
           <ScrollArea className="h-[400px] w-full overflow-hidden">
             <ScrollBar orientation="vertical" />

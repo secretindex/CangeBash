@@ -119,7 +119,7 @@ export default function Home() {
         <div className="flex flex-col min-w-md gap-3 bg-card md:w-2/4 sm:w-2/3 border-[1px] p-8 border-[#0002] rounded-md shadow-lg">
           <div className="flex flex-col mb-4 gap-2">
             <h1 className="text-center font-bold text-xl text-primary">
-              Integração CangeChat - ICC
+              CangeBash
             </h1>
             <span className="text-center text-sm text-muted-foreground">Adicione uma conversa a um cartão existente</span>
           </div>

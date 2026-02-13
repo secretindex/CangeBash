@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useRouter } from "next/navigation";
 
 const fetcher = async (conversa_id: string) => {
   const supabase = createClient();
@@ -23,6 +24,7 @@ const fetcher = async (conversa_id: string) => {
 };
 
 const ContentMessage = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const conversaId = searchParams.get("conversa_id");
   const { data, error } = useSWR(conversaId, fetcher);
@@ -31,7 +33,14 @@ const ContentMessage = () => {
 
   return (
     <div className="h-full min-w-md w-2xl p-8 py-4 bg-card flex flex-col gap-8 shadow-md justify-between rounded-md border-[1px] border-stone-400/50">
-      <h1 className="text-center text-xl font-bold">Informações da Mensagem</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-center text-xl font-bold">Informações da Mensagem</h1>
+        <div>
+          <Button variant={"outline"} className="cursor-pointer" onClick={() => router.push("/")}>
+            <Home />
+          </Button>
+        </div>
+      </div>
       <div className="flex flex-col gap-3 h-4/5 overflow-clip">
         <ScrollArea className="h-[400px] w-full overflow-hidden">
           <ScrollBar orientation="vertical" />

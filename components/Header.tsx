@@ -11,7 +11,7 @@ const Header = () => {
       <div className="">
         <Link href={"/"}>
           <h1 className="text-lg text-primary dark:text-foreground font-bold">
-            CangeChat
+            CangeBash
           </h1>
         </Link>
       </div>

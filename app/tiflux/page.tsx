@@ -11,7 +11,7 @@ const TifluxPage = () => {
         <div className="w-full">
           <h2 className="text-2xl font-bold">Acervo Tiflux</h2>
           <span className="text-muted-foreground">
-            Onde estão todos os tickets do antigo sistema Tiflux
+            Onde estão todos os tickets do antigo sistema Tiflux. Não é possível responder, apenas visualizar.
           </span>
         </div>
         <div className="panel">
