@@ -84,6 +84,8 @@ export default function Home() {
       return;
     }
 
+    if (!response) return;
+
     setCards(response);
   };
 
