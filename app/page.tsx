@@ -131,7 +131,7 @@ export default function Home() {
                 <SelectContent className="bg-background">
                   <SelectGroup>
                     <SelectLabel>Fluxos</SelectLabel>
-                    {data &&
+                    {data instanceof Array &&
                       data.map((flux, index) => {
                         return (
                           <SelectItem key={index} value={`${flux.fluxo_id}`}>
@@ -154,7 +154,7 @@ export default function Home() {
                 <SelectContent className="bg-background">
                   <SelectGroup>
                     <SelectLabel>Cartões</SelectLabel>
-                    {cards &&
+                    {cards instanceof Array &&
                       cards.map((card, index) => {
                         return (
                           <SelectItem
