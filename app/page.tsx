@@ -14,7 +14,6 @@ import {
 
 import { useRouter } from "next/navigation";
 
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useContext } from "react";
@@ -68,29 +67,24 @@ export default function Home() {
       return;
     }
 
-    console.log("esse é o fluxo " + flux);
-
-    const res = await axios.get(
-      `https://api.cange.me/card/by-flow?flow_id=${flux}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${tokenContext?.token}`,
-        },
+    const response = await fetch(`https://api.cange.me/card/by-flow?flow_id=${flux}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tokenContext?.token}`,
       },
-    )
+    }).then((res) => res.json())
 
-    if (res.status === 401) {
+    if (response.status === 401) {
       toast.error("Token expirado. Peça para o administrador atualizar o token.");
       return;
     }
 
-    if (res.data.length <= 0) {
+    if (response.length <= 0) {
       toast.error("Nenhum cartão foi encontrado neste fluxo");
       return;
     }
 
-    setCards(res.data);
+    setCards(response);
   };
 
   const handleSelectCards = (e: string | number) => {
