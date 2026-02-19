@@ -70,8 +70,8 @@ export default function Home() {
     const response = await fetch(`https://api.cange.me/card/by-flow?flow_id=${flux}`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${tokenContext?.token}`,
-        origin: "https://app.cange.me"
+        "Authorization": `Bearer ${tokenContext?.token}`,
+        "Origin": "https://app.cange.me"
       },
     }).then((res) => res.json())
 

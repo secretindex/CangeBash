@@ -9,15 +9,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { createClient } from "@/utils/supabase/client";
-import axios from "axios";
 import { signIn } from "./actions";
 
 export default function SignInPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
-  const supabase = createClient();
 
   const router = useRouter();
 
