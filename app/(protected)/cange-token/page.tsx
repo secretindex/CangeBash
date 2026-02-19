@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useContext, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { TokenContext } from "@/components/context/CangeToken";
+import axios from "axios";
 
 export default function CangeToken() {
   const [token, setToken] = useState<string>("");
@@ -15,28 +16,25 @@ export default function CangeToken() {
   const tokenContext = useContext(TokenContext);
 
   const authenticateToken = async () => {
-    const authenticated = await fetch("https://api.cange.me/session", {
-      method: "POST",
+    const auth = await axios.post("https://api.cange.me/session", {
+      email: "caio@futuratec.srv.br",
+      apikey: token
+    }, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `https://app.cange.me`,
-      },
-      body: JSON.stringify({
-        email: "caio@futuratec.srv.br",
-        apikey: token
-      })
+        origin: "https://app.cange.me"
+      }
     })
 
-    const jsonAuthenticated = await authenticated.json();
+    console.log(auth);
+    console.log(auth.data.token);
 
-    console.log(jsonAuthenticated);
-    console.log(jsonAuthenticated.token);
-
-    if (authenticated.status === 200) {
+    if (auth.status === 200) {
+      toast.success(auth.data.token)
       toast.success("Token autenticado com sucesso");
     }
 
-    handleSaveToken(jsonAuthenticated.token as string);
+    handleSaveToken(auth.data.token as string);
   }
 
   const handleSaveToken = async (authenticatedToken: string) => {

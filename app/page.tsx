@@ -71,6 +71,7 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${tokenContext?.token}`,
+        origin: "https://app.cange.me"
       },
     }).then((res) => res.json())
 

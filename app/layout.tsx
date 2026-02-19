@@ -11,16 +11,6 @@ import { TokenProvider } from "@/components/context/CangeToken";
 import { Toaster } from "sonner";
 import UserSessionContext from "@/components/context/UserSession";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 const ubuntu = Ubuntu({
   subsets: ["latin"],
   variable: "--font-ubuntu",
@@ -44,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br">
+    <html lang="pt-br" suppressHydrationWarning={true}>
       <body
         className={`${ubuntu.variable} ${ubuntuMono.variable} bg-background text-foreground antialiased min-h-screen`}
       >
