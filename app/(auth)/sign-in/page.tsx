@@ -8,7 +8,6 @@ import { BaseSyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { createClient } from "@/utils/supabase/client";
 import { signIn } from "./actions";
 
 export default function SignInPage() {
