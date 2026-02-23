@@ -22,7 +22,6 @@ export default function CangeToken() {
     }, {
       headers: {
         "Content-Type": "application/json",
-        "Origin": "https://app.cange.me"
       }
     })
 

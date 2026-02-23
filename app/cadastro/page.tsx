@@ -39,7 +39,6 @@ const Cadastro = () => {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token?.token}`,
-            "Origin": "https://app.cange.me"
           },
         },
       );
