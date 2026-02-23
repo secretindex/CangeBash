@@ -48,7 +48,7 @@ export default function Home() {
   const router = useRouter();
 
   const [cards, setCards] = useState<Array<any>>([]);
-  const [flux, setFlux] = useState<number>();
+  const [fluxo, setFlux] = useState<number>();
 
   const [idCard, setIdCard] = useState<number>(0);
 
@@ -61,13 +61,13 @@ export default function Home() {
   }, [idCard]);
 
   const handleGetCards = async () => {
-    if (!flux) {
+    if (!fluxo) {
       toast.error("Selecione um fluxo!");
 
       return;
     }
 
-    const response = await fetch(`https://api.cange.me/card/by-flow?flow_id=${flux}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_CANGE_API_URL}/card/by-flow?flow_id=${fluxo}`, {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${tokenContext?.token}`,
@@ -181,7 +181,7 @@ export default function Home() {
               <Search />
               Buscar Cartões
             </Button>
-            <GetCard id_card={`${idCard}`} flow_id={`${flux}`} />
+            <GetCard id_card={`${idCard}`} flow_id={`${fluxo}`} />
           </div>
           <div>
             <Button variant="outline" onClick={() => router.push("/cange-token")} className="text-xs text-secondary-foreground cursor-pointer w-full">Renovar token do Cange</Button>

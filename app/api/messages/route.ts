@@ -5,6 +5,6 @@ export async function GET() {
   const supabase = await createClient()
   try {
   } catch (e) {
-    return NextResponse.json({ message: e, status: "fail" });
+    return NextResponse.json({ message: String(e), status: "fail" }, { status: 500 });
   }
 }
