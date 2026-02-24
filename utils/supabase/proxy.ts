@@ -41,6 +41,7 @@ export async function updateSession(request: NextRequest) {
     !user &&
     !request.nextUrl.pathname.startsWith('/sign-in') &&
     !request.nextUrl.pathname.startsWith('/mensagem') &&
+    !request.nextUrl.pathname.startsWith('/api/cange') &&
     !request.nextUrl.pathname.startsWith("/api/webhook")
   ) {
     // no user, potentially respond by redirecting the user to the login page

@@ -1,7 +1,5 @@
 "use client";
 
-// import { useState } from "react";
-
 import { TifluxTable } from "@/components/tiflux_archive/TicketsTable";
 
 const TifluxPage = () => {

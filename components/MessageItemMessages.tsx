@@ -21,7 +21,6 @@ import { CardAndFluxContext } from "./context/CardAndFlux";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { TokenContext } from "./context/CangeToken";
 
 interface MessageProps {
   title: string;
@@ -46,17 +45,15 @@ const MessageItemMessages = ({
 
   const router = useRouter();
 
-  const token = useContext(TokenContext)
   const cnfContext = useContext(CardAndFluxContext);
 
   useEffect(() => {
     axios
       .get(
-        `https://api.cange.me/card?id_card=${card_id}&flow_id=${flow_id}`,
+        `/api/cange/card?id_card=${card_id}&flow_id=${flow_id}`,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token?.token}`,
           },
         },
       )

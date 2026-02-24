@@ -21,12 +21,11 @@ import axios from "axios";
 import Link from "next/link";
 
 import { Button } from "./ui/button";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import { CardAndFluxContext } from "./context/CardAndFlux";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
-import { TokenContext } from "./context/CangeToken";
 
 interface MessageProps {
   title: string;
@@ -36,20 +35,15 @@ interface MessageProps {
 }
 
 const MessageItem = ({ title, date, conversaId, atendente }: MessageProps) => {
-  const token = useContext(TokenContext);
   const [dia, hora] = date.toLocaleString().split(", ");
   const supabase = createClient();
-
-  useEffect(() => {
-    console.log(token);
-  }, []);
 
   const cnfContext = useContext(CardAndFluxContext);
 
   const handleAssociateMessageToExistingCard = async () => {
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card-comment`,
+        "/api/cange/card-comment",
         {
           card_id: cnfContext?.cardAndFlux?.cardId,
           flow_id: cnfContext?.cardAndFlux?.fluxId,
@@ -58,7 +52,6 @@ const MessageItem = ({ title, date, conversaId, atendente }: MessageProps) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token?.token}`,
           },
         },
       );

@@ -14,9 +14,8 @@ import axios from "axios";
 import useSWR from "swr";
 import mockConversas from "./message_api_mock";
 import MessageItem from "./MessageItem";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
-import { TokenContext } from "./context/CangeToken";
 import { createClient } from "@/utils/supabase/client";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
@@ -28,11 +27,10 @@ const fetcher = async ([id_card, flow_id, token]: string[]) => {
     .order("created_at", { ascending: false });
 
   const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_CANGE_API_URL}/card?id_card=${id_card}&flow_id=${flow_id}`,
+    `/api/cange/card?id_card=${id_card}&flow_id=${flow_id}`,
     {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     },
   );
@@ -49,9 +47,8 @@ const GetCard = ({
   id_card: string;
   flow_id: string;
 }) => {
-  const token = useContext(TokenContext);
   const { data, error, isLoading, mutate } = useSWR(
-    [id_card, flow_id, token?.token],
+    [id_card, flow_id],
     fetcher,
     {
       revalidateOnFocus: false,

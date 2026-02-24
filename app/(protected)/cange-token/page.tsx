@@ -22,7 +22,7 @@ export default function CangeToken() {
   const tokenContext = useContext(TokenContext);
 
   const authenticateToken = async () => {
-    const auth = await axios.post("https://api.cange.me/session", {
+    const auth = await axios.post("/api/cange/session", {
       email: "caio@futuratec.srv.br",
       apikey: token
     }, {
