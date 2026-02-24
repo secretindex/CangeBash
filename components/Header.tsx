@@ -1,4 +1,4 @@
-import { Clock, MessageCircle, Plus } from "lucide-react";
+import { ArrowRightLeft, Clock, MessageCircle, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 
 import Link from "next/link";
@@ -40,6 +40,15 @@ const Header = () => {
           >
             <Clock />
             Histórico de Tickets
+          </Button>
+        </Link>
+        <Link href={"/associated"}>
+          <Button
+            variant="ghost"
+            className="shadow-none px-4 text-sm font-bold transition-all"
+          >
+            <ArrowRightLeft />
+            Mensagens Atribuídas
           </Button>
         </Link>
         <ToggleTheme />

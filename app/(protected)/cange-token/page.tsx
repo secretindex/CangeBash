@@ -10,6 +10,12 @@ import { Spinner } from "@/components/ui/spinner";
 import { TokenContext } from "@/components/context/CangeToken";
 import axios from "axios";
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  const data = await res.json();
+  return data;
+};
+
 export default function CangeToken() {
   const [token, setToken] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);

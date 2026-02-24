@@ -41,7 +41,7 @@ const fetcher = async (table: string) => {
 };
 
 export default function Home() {
-  const { data, error, isLoading, mutate } = useSWR("fluxos", fetcher);
+  const { data: fluxos } = useSWR("fluxos", fetcher);
   const cnfContext = useContext(CardAndFluxContext);
   const tokenContext = useContext(TokenContext);
 
@@ -56,21 +56,15 @@ export default function Home() {
     if (cards.length > 0) toast.success("Preenchido todos os cards!");
   }, [cards]);
 
-  useEffect(() => {
-    console.log(idCard);
-  }, [idCard]);
-
   const handleGetCards = async () => {
     if (!fluxo) {
       toast.error("Selecione um fluxo!");
-
       return;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_CANGE_API_URL}/card/by-flow?flow_id=${fluxo}`, {
+    const response = await fetch(`/api/cards?flow_id=${fluxo}&token=${tokenContext?.token}`, {
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${tokenContext?.token}`,
       },
     }).then((res) => res.json())
 
@@ -131,8 +125,8 @@ export default function Home() {
                 <SelectContent className="bg-background">
                   <SelectGroup>
                     <SelectLabel>Fluxos</SelectLabel>
-                    {data instanceof Array &&
-                      data.map((flux, index) => {
+                    {fluxos instanceof Array &&
+                      fluxos.map((flux, index) => {
                         return (
                           <SelectItem key={index} value={`${flux.fluxo_id}`}>
                             {flux.nome}
