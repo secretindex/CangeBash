@@ -12,7 +12,6 @@ import { Button } from "./ui/button";
 
 import axios from "axios";
 import useSWR from "swr";
-import mockConversas from "./message_api_mock";
 import MessageItem from "./MessageItem";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -27,10 +26,12 @@ const fetcher = async ([id_card, flow_id, token]: string[]) => {
     .order("created_at", { ascending: false });
 
   const res = await axios.get(
-    `/api/cange/card?id_card=${id_card}&flow_id=${flow_id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cange/card?id_card=${id_card}&flow_id=${flow_id}`,
     {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        referer: process.env.NEXT_PUBLIC_API_URL,
       },
     },
   );
