@@ -23,7 +23,6 @@ export async function GET(
     proxyHeaders.set("accept", request.headers.get("accept")!);
   }
 
-  // Fetch token from DB
   try {
     const supabase = await createClient();
     const { data: tokenData, error: tokenError } = await supabase
